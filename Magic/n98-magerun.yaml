@@ -1,0 +1,11 @@
+autoloaders:
+  # Namespace => path to your libs
+  Magic: %module%/src/
+
+  # or in project based config i.e.:
+  # MyCommandNamespace: %root%/lib
+
+commands:
+  customCommands:
+    - Magic\ExecCommand
+#    - Magic\IncludeVendorCommand

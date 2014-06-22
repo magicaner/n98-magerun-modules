@@ -1,0 +1,52 @@
+<dl>
+	<dt><strong>
+		<a class="toggleTemplate" href="<?php echo Mage::getUrl('debug/index/toggleTemplateHints' , array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>">
+            <?php echo $this->__("Toggle Template Hints") ?>
+		</a>
+		<a class="toggleTemplate" href="<?php echo Mage::getUrl('debug/index/toggleTranslateInline' , array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>">
+            <?php echo $this->__("Toggle Translate Inline") ?>
+		</a>
+	</strong></dt>
+</dl>
+<dl>
+	<dt><strong>
+		<a class="toggleTemplate" href="<?php echo Mage::getUrl('debug/index/downloadConfig' , array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>">Download Config (XML)</a>
+	</strong>
+    <strong>
+		<a class="toggleTemplate" href="<?php echo Mage::getUrl('debug/index/downloadConfigAsText' , array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>">Download Config (TEXT)</a>
+	</strong></dt>
+</dl>
+<br/>
+
+<form action="#" id="config-search-form" onSubmit="handlerFunction(); return false;">
+    <input name="query" class="input-text required-entry" type="search" size="40" />
+    <input type="button" onClick="handlerFunction()" value="<?php echo $this->__('Search Config') ?>" />
+</form>
+<p>
+Search examples: <em>default/system</em>, <em>global/resources/default_setup</em>, <em>frontend/events</em> or <em>modules</em>. If you don't know what to search check all the <a class="toggleTemplate" href="<?php echo Mage::getUrl('debug/index/downloadConfigAsText' , array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>">configuration keys</a>.
+</p>
+
+<script type="text/javascript">
+function handlerFunction(){
+    var request = new Ajax.Updater(
+        'config-search-results',
+        '<?php echo $this->getUrl("debug/index/searchConfig" , array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>',
+        {
+            method: 'post',
+            parameters: Form.serialize($('config-search-form'))
+        });
+}
+</script>
+<div id="config-search-results">
+<table>
+	<thead>
+		<tr>
+            <th><?php echo $this->__("#") ?></th>
+            <th><?php echo $this->__("Config") ?></th>
+            <th><?php echo $this->__("Value") ?></th>
+		</tr>
+	</thead>
+    <tbody>
+	</tbody>
+</table>
+</div>

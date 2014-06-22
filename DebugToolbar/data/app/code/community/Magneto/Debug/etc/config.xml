@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Magneto_Debug>
+            <version>1.0.0</version>
+        </Magneto_Debug>
+    </modules>
+    <frontend>
+        <routers>
+            <debug>
+                <use>standard</use>
+                <args>
+                    <module>Magneto_Debug</module>
+                    <frontName>debug</frontName>
+                </args>
+            </debug>
+        </routers>
+        <layout>
+            <updates>
+                <debug>
+                    <file>debug.xml</file>
+                </debug>
+            </updates>
+        </layout>
+    </frontend>
+    <global>
+        <models>
+            <debug>
+                <class>Magneto_Debug_Model</class>
+            </debug>
+        </models>
+        <resources>
+            <debug_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </debug_write>
+            <debug_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </debug_read>
+        </resources>
+        <blocks>
+            <debug>
+                <class>Magneto_Debug_Block</class>
+            </debug>
+        </blocks>
+        <helpers>
+            <debug>
+                <class>Magneto_Debug_Helper</class>
+            </debug>
+        </helpers>
+
+		<events>
+            <controller_action_layout_generate_blocks_after>
+                <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onLayoutGenerate</method>
+                    </debug_observer>
+                </observers>
+            </controller_action_layout_generate_blocks_after>
+			<core_block_abstract_to_html_before>
+			    <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onBlockToHtml</method>
+                    </debug_observer>
+                </observers>
+			</core_block_abstract_to_html_before>
+			<controller_action_postdispatch>
+                <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onActionPostDispatch</method>
+                    </debug_observer>
+                </observers>
+            </controller_action_postdispatch>
+			<core_collection_abstract_load_before>
+                <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onCollectionLoad</method>
+                    </debug_observer>
+                </observers>
+            </core_collection_abstract_load_before>
+            <eav_collection_abstract_load_before>
+                <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onEavCollectionLoad</method>
+                    </debug_observer>
+                </observers>
+            </eav_collection_abstract_load_before>
+            <!-- <core_block_abstract_prepare_layout_after> -->
+            <!--     <observers> -->
+            <!--         <debug_observer> -->
+            <!--             <type>singleton</type> -->
+            <!--             <class>debug/observer</class> -->
+            <!--             <method>onPrepareLayout</method> -->
+            <!--         </debug_observer> -->
+            <!--     </observers> -->
+            <!-- </core_block_abstract_prepare_layout_after> -->
+            <model_load_after>
+            	 <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onModelLoad</method>
+                    </debug_observer>
+                </observers>
+            </model_load_after>
+            <controller_action_predispatch>
+                <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onActionPreDispatch</method>
+                    </debug_observer>
+                </observers>
+            </controller_action_predispatch>
+		</events>
+    </global>
+
+    <default>
+        <debug>
+            <options>
+                <enable>1</enable>
+                <directory_separator></directory_separator>
+                <root_path></root_path>
+            </options>
+        </debug>
+    </default>
+
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <debug>
+                            <title>Debug Toolbar</title>
+                            <sort_order>10</sort_order>
+                        </debug>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <debug>Debug Toolbar Options</debug>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>
