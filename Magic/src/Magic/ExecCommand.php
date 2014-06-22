@@ -42,7 +42,7 @@ class ExecCommand extends AbstractMagentoCommand
                 require $this->_magentoRootFolder.'/vendor/autoload.php';
             }
 
-            $function = $input->getArgument('required');
+            $function = $input->getArgument('method');
             list($model, $method) = explode('::', $function);
 
             $model = \Mage::getModel($model);
