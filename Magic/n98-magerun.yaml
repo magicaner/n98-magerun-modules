@@ -8,4 +8,5 @@ autoloaders:
 commands:
   customCommands:
     - Magic\ExecCommand
+    - Magic\CrudCommand
 #    - Magic\IncludeVendorCommand
