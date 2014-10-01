@@ -13,7 +13,7 @@ class {{block_admin_edit_form_class_name}}
 
         $form = new Varien_Data_Form();
 
-        $helper = Mage::helper('{{module}}');
+        $helper = Mage::helper('{{module_alias}}');
 
         $fieldset = $form->addFieldset('new', array('legend' => $helper->__('{{model}} details')));
 

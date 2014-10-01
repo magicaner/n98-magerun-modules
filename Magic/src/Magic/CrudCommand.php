@@ -22,9 +22,10 @@ class CrudCommand extends AbstractMagentoCommand
     private $_templatePaths = null;
 
     public $templates = [
-            'model' => '{{model}}/{{model}}',
-            'model_resource' => '{{model}}/Resource/{{model}}',
-            'model_resource_collection' => '{{model}}/Resource/{{model}}/Collection',
+            'helper_data' => 'Helper/Data',
+            'model' => 'Model/{{model}}',
+            'model_resource' => 'Model/Resource/{{model}}',
+            'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
             'admin_controller' => 'controllers/Adminhtml/{{controller}}',
             'block_admin_model' => 'Block/Adminhtml/{{model}}',
             'block_admin_model_grid' => 'Block/Adminhtml/{{model}}/Grid',
@@ -110,12 +111,13 @@ class CrudCommand extends AbstractMagentoCommand
         }
         $paths = $this->templates;
 
-        $codePool = (string)\Mage::app()->getConfig()->getModuleConfig($this->_vars['module'])->codePool;
-        $moduleDir = \Mage::app()->getConfig()->getOptions()->getCodeDir().DS.$codePool.DS.$this->uc_words($moduleName, DS);
+        $moduleName = $this->uc_words($this->_vars['module']);
+        $codePool = (string)\Mage::app()->getConfig()->getModuleConfig($moduleName)->codePool;
+        $moduleDir = \Mage::app()->getConfig()->getOptions()->getCodeDir().DS.$codePool.DS.$this->uc_words($moduleName,'/','_');
 
         foreach ($paths as &$path) {
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-            $path = $moduleDir.$path.$this->phpExtension;
+            $path = $moduleDir.DS.$path.$this->phpExtension;
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
@@ -156,10 +158,9 @@ class CrudCommand extends AbstractMagentoCommand
     protected function saveTemplate($name, $content)
     {
         $paths = $this->getApplicationPaths();
-
-        var_dump($paths[$name]); die;
+        $file = new FileSystem();
         if (isset($paths[$name])) {
-            file_put_contents($paths[$name], $content);
+            $file->filewrite($paths[$name], $content);
         } else {
             throw new \Exception('Path for \''.$name.'\' not found');
         }
@@ -170,17 +171,33 @@ class CrudCommand extends AbstractMagentoCommand
         $module = $input->getArgument('module');
         $model = $input->getArgument('model');
         $table = $input->getArgument('table');
+
+        @list($module, $moduleAlias) = @explode(':', $module);
+        if (!$moduleAlias) {
+            $moduleAlias = $module;
+        }
+
+        $resource = \Mage::getSingleton('core/resource');
+
+        if (strpos($table,'/') === false) {
+            $table = $resource->getTableName($moduleAlias.'/'.$table);
+        } else {
+            $table = $resource->getTableName($table);
+        }
+
         $this->_vars = [
             'module' => $module,
+            'module_alias' => $moduleAlias,
             'model' => $model,
             'table' => $table,
-            'primarykey' => $this->_getTablePrimaryKey($table),
+            'primarykey' => $this->_getTablePrimaryKey($module, $table),
             'menu' => $input->getOption('menu'),
 
             'model_class_name' => $this->_generateModelClassName($module, $model),
             'model_resource_class_name' => $this->_generateModelResourceClassName($module, $model),
             'model_resource_collection_class_name' => $this->_generateModelResourceCollectionClassName($module, $model),
             'admin_controller_class_name' => $this->_generateAdminControllerClassName($module, $model),
+            'helper_data_class_name' => $this->_generatHelperClassName($module, 'data'),
 
             'admin_controller' => 'adminhtml_'.$model,
 
@@ -189,10 +206,10 @@ class CrudCommand extends AbstractMagentoCommand
             'block_admin_edit' => $this->_generateBlockName($module, $model, 'block_admin_edit'),
             'block_admin_edit_form' => $this->_generateBlockName($module, $model, 'block_admin_edit_form'),
 
-            'block_admin_grid_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid_class_name'),
-            'block_admin_edit_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit_class_name'),
-            'block_admin_edit_form_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit_form_class_name'),
-            'block_admin_grid_container_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid_container_class_name'),
+            'block_admin_grid_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid'),
+            'block_admin_edit_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit'),
+            'block_admin_edit_form_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit_form'),
+            'block_admin_grid_container_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid_container'),
         ];
 
     }
@@ -231,17 +248,17 @@ class CrudCommand extends AbstractMagentoCommand
 
     private function _generateModelClassName($module, $model)
     {
-        return $this->uc_words($module).'_'.$this->uc_words($model);
+        return $this->uc_words($module).'_Model_'.$this->uc_words($model);
     }
 
     private function _generateModelResourceClassName($module, $model)
     {
-        return $this->uc_words($module).'_Resource_'.$this->uc_words($model);
+        return $this->uc_words($module).'_Model_Resource_'.$this->uc_words($model);
     }
 
     private function _generateModelResourceCollectionClassName($module, $model)
     {
-        return $this->uc_words($module).'_Resource_Collection_'.$this->uc_words($model);
+        return $this->uc_words($module).'_Model_Resource_'.$this->uc_words($model).'_Collection';
     }
 
     private function _generateAdminControllerClassName($module, $model)
@@ -249,20 +266,29 @@ class CrudCommand extends AbstractMagentoCommand
         return $this->uc_words($module).'_Adminhtml_'.$this->uc_words($model).'Controller';
     }
 
-    private function _getTablePrimaryKey($table)
+    private function _getTablePrimaryKey($module, $table)
     {
         $resource = \Mage::getSingleton('core/resource');
 
         $connection = $resource->getConnection('core_read');
 
-        $indexes = $connection->getIndexList($table);
+        if (strpos($table,'/') === false) {
+            $tableName = $resource->getTableName($module.'/'.$table);
+        } else {
+            $tableName = $resource->getTableName($table);
+        }
+
+
+
+
+        $indexes = $connection->getIndexList($tableName);
         if (isset($indexes['PRIMARY']) && isset($indexes['PRIMARY']['fields']) ) {
             return $indexes['PRIMARY']['fields'][0];
         } else {
             return 'entity_id';
         }
 
-        return $connection->getPrimaryKeyName($table);
+        return $connection->getPrimaryKeyName($tableName);
     }
 
     private function _generateBlockName($model, $blockName)
@@ -295,6 +321,11 @@ class CrudCommand extends AbstractMagentoCommand
         } else {
             return $blockName;
         }
+    }
+
+    private function _generatHelperClassName($module, $name)
+    {
+        return $this->uc_words($module.'_Helper_'.$name);
     }
 
     /**

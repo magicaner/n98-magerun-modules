@@ -11,6 +11,4 @@ class {{model_resource_collection_class_name}}
     {
         $this->_init('{{module}}/{{model}}');
     }
-
-    }
 }

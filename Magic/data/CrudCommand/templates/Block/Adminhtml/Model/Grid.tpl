@@ -8,7 +8,7 @@ class {{block_admin_grid_class_name}}
     public function __construct()
     {
         parent::__construct();
-        $this->setId('{{module}}_{{model}}_grid');
+        $this->setId('{{module_alias}}_{{model}}_grid');
         $this->setDefaultSort('{{primarykey}}');
         $this->setDefaultDir('ASC');
         $this->setSaveParametersInSession(true);
@@ -22,7 +22,7 @@ class {{block_admin_grid_class_name}}
      */
     protected function _prepareCollection()
     {
-        $collection = Mage::getModel('{{module}}/{{model}}')->getCollection();
+        $collection = Mage::getModel('{{module_alias}}/{{model}}')->getCollection();
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
@@ -48,7 +48,7 @@ class {{block_admin_grid_class_name}}
      */
     protected function _prepareColumns()
     {
-        $helper = $this->helper('{{model}}');
+        $helper = $this->helper('{{module_alias}}');
         $this->addColumn('{{primarykey}}', array(
             'header' => $helper->__('ID'),
             'index'  => '{{primarykey}}',

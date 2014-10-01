@@ -23,6 +23,26 @@
             </updates>
         </layout>
     </frontend>
+    <adminhtml>
+        <layout>
+            <updates>
+                <debug>
+                    <file>debug.xml</file>
+                </debug>
+            </updates>
+        </layout>
+    </adminhtml>
+    <admin>
+        <routers>
+            <debug>
+                <use>admin</use>
+                <args>
+                    <module>Magneto_Debug</module>
+                    <frontName>debug</frontName>
+                </args>
+            </debug>
+        </routers>
+    </admin>
     <global>
         <models>
             <debug>

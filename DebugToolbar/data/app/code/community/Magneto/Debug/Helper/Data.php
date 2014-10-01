@@ -151,17 +151,23 @@ class Magneto_Debug_Helper_Data extends Mage_Core_Helper_Abstract
 
         $xml = htmlspecialchars($xml);
 
+        if (Mage::app()->getStore()->isAdmin()) {
+            $routeBase = 'debug/admin_index';
+        } else {
+            $routeBase = 'debug/index';
+        }
+
 
         $pattern = '/{{(.*?)}}/ium';
         $xml = preg_replace_callback(
             $pattern,
-            function($matches) {
+            function($matches) use ($routeBase) {
                 list($key,$val) = explode('=', $matches[1]);
 
                 switch ($key) {
                     case 'block':
 
-                        $url = Mage::getUrl('debug/index/viewBlock',
+                        $url = Mage::getUrl($routeBase . '/viewBlock',
                             [
                             'block' => Mage::app()->getConfig()->getBlockClassName($val),
                             '_secure' => Mage::app()->getStore()->isCurrentlySecure()
@@ -170,7 +176,7 @@ class Magneto_Debug_Helper_Data extends Mage_Core_Helper_Abstract
                         $result = '<a class="remoteCall" href="'.$url.'">'.$val.'</a>';
                         break;
                    case 'helper':
-                        $url = Mage::getUrl('debug/index/viewBlock',
+                        $url = Mage::getUrl($routeBase . '/viewBlock',
                             [
                                 'block' => Mage::app()->getConfig()->getHelperClassName(preg_replace('/\/[^\/]*$/', '', $val)) ,
                                 '_secure' => Mage::app()->getStore()->isCurrentlySecure()
@@ -183,7 +189,7 @@ class Magneto_Debug_Helper_Data extends Mage_Core_Helper_Abstract
                         $block = new Mage_Core_Block_Template();
                         $block->setTemplate($val);
 
-                        $url = Mage::getUrl('debug/index/viewTemplate',
+                        $url = Mage::getUrl($routeBase . '/viewTemplate',
                             [
                                 '_query' =>
                                 [

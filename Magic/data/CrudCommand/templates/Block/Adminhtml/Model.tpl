@@ -10,9 +10,9 @@ class {{block_admin_grid_container_class_name}}
      */
     public function __construct()
     {
-        $this->_blockGroup = '{{module}}';
+        $this->_blockGroup = '{{module_alias}}';
         $this->_controller = '{{admin_controller}}';
-        $this->_headerText = Mage::helper('{{module}}')->__('Manage {{model}}');
+        $this->_headerText = Mage::helper('{{module_alias}}')->__('Manage {{model}}');
         parent::__construct();
     }
 }
