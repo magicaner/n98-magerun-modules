@@ -1,0 +1,28 @@
+<table>
+	<thead>
+		<tr>
+            <th><?php echo $this->__("#") ?></th>
+            <th><?php echo $this->__("Group Type") ?></th>
+            <th><?php echo $this->__("Search Results") ?></th>
+		</tr>
+	</thead>
+    <tbody>
+        <div id="class-search-results">
+        <?php if(count($items)): ?>
+            <?php $row=0 ?>
+            <?php foreach($items as $key=>$value): ?>
+                <tr>
+                    <td><?php echo $row ?></td>
+                    <td><?php echo $key ?></td>
+                    <td>
+                        <a class="remoteCall" href="<?php echo Mage::getUrl('debug/admin_index/viewBlock', array('_query'=> array('block' => $value) , '_secure' => Mage::app()->getStore()->isCurrentlySecure())); ?>"><?php echo htmlspecialchars($value) ?></a>
+                    </td>
+                </tr>
+                <?php $row++ ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="3">Grouped classes not found for this uri.</td></tr>
+        <?php endif; ?>
+        </div>
+	</tbody>
+</table>

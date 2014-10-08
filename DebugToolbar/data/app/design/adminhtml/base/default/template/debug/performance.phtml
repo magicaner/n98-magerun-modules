@@ -1,0 +1,42 @@
+<?php
+?>
+<h4><?php $this->__('Performance') ?></h4>
+<dl>
+	<dt><strong>
+		<a class="remoteCall toggleTemplate" href="<?php echo Mage::getUrl('debug/admin_index/clearCache', array('_secure' => Mage::app()->getStore()->isCurrentlySecure())) ?>">
+			Clear Magento Cache
+		</a>
+	</strong></dt>
+</dl>
+
+<?php
+    $rows = Varien_Profiler::getTimers();
+    if (!$rows) {
+        return '';
+    }
+
+    echo '<table class="debug_profile_log" cellpadding="0" cellspacing="0">';
+    echo '<caption>Timers</caption>';
+    echo '<tr><th>Name</th><th>Time</th><th>Count</th><th>Realmem</th><th>Emalloc</th></tr>';
+    foreach ($rows as $name => $row) {
+
+        $sum = Varien_Profiler::fetch($name,'sum');
+        $count = Varien_Profiler::fetch($name,'count');
+        $realmem = Varien_Profiler::fetch($name,'realmem');
+        $emalloc = Varien_Profiler::fetch($name,'emalloc');
+        if ($sum<.0010 && $count<10 && $emalloc<10000) {
+            continue;
+        }
+
+        echo '<tr>';
+        echo '<td>'.$name.'</td>';
+        echo '<td>'.number_format($sum,4).'</td>';
+        echo '<td>'.$count.'</td>';
+        echo '<td>'.number_format($emalloc).'</td>';
+        echo '<td>'.number_format($realmem).'</td>';
+        echo '</tr>';
+    }
+    echo '</table>';
+?>
+
+
