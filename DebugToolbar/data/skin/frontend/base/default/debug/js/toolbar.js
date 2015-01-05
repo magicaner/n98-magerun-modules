@@ -19,6 +19,7 @@
 	$('head').append('<link rel="stylesheet" href="'+DEBUG_TOOLBAR_MEDIA_URL+'css/toolbar.css" type="text/css" />');
 	var COOKIE_NAME = 'djdt';
 	var djdt = {
+        popup: null,
 		initRemoteCallEvent: function(context) {
 			var self = this;
 			context = context || '#djDebug';
@@ -145,6 +146,7 @@
 			} else {
 				djdt.show_toolbar(false);
 			}
+			this.initHover(document);
 		},
 		toggle_content: function(elem) {
 			if (elem.is(':visible')) {
@@ -197,7 +199,151 @@
 			var uarr = String.fromCharCode(0x25b6);
 			var darr = String.fromCharCode(0x25bc);
 			elem.html(elem.html() == uarr ? darr : uarr);
+		},
+		showPopup: function(elements,e) {
+		    var self = this;
+		    this.hidePopup();
+		    
+		    this.popup = $('<div class="djDebugToolbarPopup"><a href="#close" class="btn-close">&times;</a></div>').appendTo('body');
+
+		    var table = $('<table></table>').appendTo(this.popup);
+		    $(elements).each(function() {
+                var data = $(this).attr('data-debug');
+                if (!$.isNumeric(data)) {
+                    data = [eval('(' + data + ')')];
+                } else {
+                    data = $(this).data('debug');
+                }
+                
+                
+                
+		        for (var i = 0; i< data.length; i++) {
+		            var d = data[i];
+    		        table.append('<tr><td>class</td><td><span>'+ d.class +'</span></td></tr>');
+    	            table.append('<tr><td>name</td><td><span>'+ d.name +'</span></td></tr>');
+    	            table.append('<tr><td>alias</td><td><span>'+ d.alias +'</span></td></tr>');
+    	            table.append('<tr><td>template</td><td><span>'+ d.template +'</span></td></tr>');
+    	            table.append('<tr><td colspan="2"> ----------------------- </td></tr>');
+		        }
+		    });
+		    
+		    /*var offset = $(elements.get(0)).offset();
+		    $(this.popup).css({
+		        'left' : offset.left + 'px',
+		        'top' : offset.top + 'px'
+		    }).show();*/
+		    
+		    $(this.popup).on('dblclick', 'td span', function(e) {
+		        self.select(this);
+		    })
+		    $(this.popup).on('click', 'a[href$=#close]', function(e) {
+		        self.hidePopup(e);
+		    })
+		    self.position($(this.popup), e).show();
+		},
+		hidePopup: function(e){
+		     if (this.popup != null) {
+		         $(this.popup).hide().remove();
+		         this.popup = null;
+		     }  
+		},
+		eachChildren: function(element, callback) {
+            $(element).each(function(){
+                var script = $(this);
+                var endpointSelector = 'script[type="djDebug-end"][data-id="'+ script.attr('data-id') +'"]';
+                script.nextUntil(endpointSelector).each(function(){
+                    $.proxy(callback, this, script).call();
+                });
+                $(endpointSelector, element).remove();
+                //script.remove();
+            });
+		},
+		setBlockHovers: function(element) {
+            var self = this;
+            var needAddHover = true;
+            var startSelector = 'script[type="djDebug-start"]';
+            var endSelector = 'script[type="djDebug-end"]';
+            var startSelectorStack = []; 
+            this.eachChildren($(element).find(startSelector), function(script){
+                var element = $(this);
+                if (element.is(startSelector)) {
+                    startSelectorStack.unshift(element);
+                }
+                
+                if (element.is(endSelector) && startSelectorStack.length > 0) {
+                    startSelectorStack.shift();
+                }
+                
+                if (element.is('script,link,meta')) {
+                    return;
+                }
+                
+                if (startSelectorStack.length == 0) {
+                    self.addHover(element, script);
+                }
+            });
+            
+            
+		},
+		addHover: function(element, script) {
+		    var data = script.attr('data-debug');
+		    element = $(element);
+            
+            if (typeof data == 'string') {
+                data = eval('(' + data + ')');
+            }
+            
+            var existingData = element.data('debug');
+            if (existingData) {
+                existingData.push(data);
+            } else {
+                existingData = [data];
+            }
+            
+            element.attr('data-debug',script.attr('data-id'));
+            element.data('debug', existingData);
+		},
+		initHover: function(element) {
+		    var self = this;
+		    this.setBlockHovers(element);
+		    
+		    $(window).click(function(e) {
+		        /*if (!$('#djDebugToolbar').is(':visible')) {
+		            return;
+		        }*/
+		        if (e.which == 3 && e.ctrlKey) {
+		            self.hidePopup(e);
+		            var parents = $(e.target).parents('[data-debug]');
+		            if (parents.length > 0) {
+		                self.showPopup(parents,e);
+		            }
+		            return false;
+		        } else if(e.which == 3 && e.ctrlKey) {
+		            this.unhighLighBlock();
+                    self.hidePopup(e);
+                    return false;
+                }
+		    });
+		},
+		highLighBlock: function(element){
+		    this.unhighLighBlock();
+		    $(element).addClass('djDebugHover-selected'); 
+		},
+		unhighLighBlock: function(){
+		    $('.djDebugHover-selected').removeClass('djDebugHover-selected'); 
+		},
+		position: function(element, e){
+		    element.css("position","absolute");
+		    /*element.css("top", Math.max(0, (($(window).height() - $(element).outerHeight()) / 2) + 
+		                                                    $(window).scrollTop()) + "px");
+		    element.css("left", Math.max(0, (($(window).width() - $(element).outerWidth()) / 2) + 
+		                                                    $(window).scrollLeft()) + "px");*/
+		    
+		    element.css("top", (e.pageY - $(element).outerHeight() / 2) + "px");
+		    element.css("left", (e.pageX - $(element).outerWidth() / 2) + "px");
+            return element;
 		}
+		
 	};
 	$(document).ready(function() {
 		djdt.init();

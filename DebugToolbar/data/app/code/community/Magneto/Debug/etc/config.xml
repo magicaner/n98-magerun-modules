@@ -100,6 +100,15 @@
                     </debug_observer>
                 </observers>
             </controller_action_postdispatch>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <debug_observer>
+                        <type>singleton</type>
+                        <class>debug/observer</class>
+                        <method>onAfterToHtml</method>
+                    </debug_observer>
+                </observers>
+            </core_block_abstract_to_html_after>
 			<core_collection_abstract_load_before>
                 <observers>
                     <debug_observer>

@@ -27,7 +27,7 @@
  */
 class Magneto_Debug_Model_Observer
 {
-
+    static $id = 1;
     /**
      * @var array
      */
@@ -292,6 +292,80 @@ class Magneto_Debug_Model_Observer
         $collectionStruct['type'] = 'mysql';
         $collectionStruct['class'] = get_class($collection);
         $this->collections[] = $collectionStruct;
+    }
+
+    /**
+     * add js onhover for each html template block
+     *
+     * @param Varien_Event_Observer $event observer
+     * @return void
+     */
+    public function onAfterToHtml(Varien_Event_Observer $event)
+    {
+        if (Mage::app()->getStore()->isAdmin()) {
+            return;
+        }
+
+
+
+        /* @var $block Mage_Core_Block_Template */
+
+        $ignoreTags = ['script','style','meta','head','!DOCTYPE'];
+
+        $transport = $event->getTransport();
+        $html = $transport->getHtml();
+        $block = $event->getBlock();
+
+        if ($block instanceof Magneto_Debug_Block_Abstract) {
+            return;
+        }
+
+        if ($block instanceof Mage_Core_Block_Profiler) {
+            return;
+        }
+
+        $absoluteFilepath = Mage::getBaseDir('design') . DIRECTORY_SEPARATOR .  $block->getTemplateFile();
+        $absoluteFilepath = Mage::helper('debug')->fixAbsolutePath($absoluteFilepath);
+
+        $data = [
+            'class' => get_class($block),
+            'alias' => $block->getAlias(),
+            'name' => $block->getNameInLayout(),
+            'template' => $absoluteFilepath,
+            //'layout' => $block->get
+            //'data' => $block->getData()
+        ];
+
+        $blockJson = Zend_Json::encode($data);
+
+        if ($block instanceof Mage_Page_Block_Html) {
+            $pattern = '/^(.*?)<([^!<>\s]+)(\s*.*?>.*)$/imsu';
+            $html = preg_replace_callback(
+                $pattern,
+                function($matches) use ($ignoreTags, $blockJson) {
+                    $tag = trim($matches[2]);
+
+                    if (!$tag || in_array($matches[2], $ignoreTags)) {
+                        return $matches[0];
+                    }
+
+                    $html = $matches[1] . '<' . $matches[2] . ' data-debug="' . htmlentities($blockJson) . '"' . $matches[3];
+
+                    return $html;
+                },
+                $html
+            );
+        } else {
+
+            $id = self::$id;
+            self::$id++;
+
+            $scriptStart = '<script type="djDebug-start" data-id="' . $id . '" data-debug="' . htmlentities($blockJson) . '"></script>';
+            $scriptEnd = '<script type="djDebug-end" data-id="' . $id . '"></script>';
+
+            $html = $scriptStart . $html . $scriptEnd;
+        }
+        $transport->setHtml($html);
     }
 
     /**

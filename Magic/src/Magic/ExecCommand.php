@@ -46,6 +46,11 @@ class ExecCommand extends AbstractMagentoCommand
             list($model, $method) = explode('::', $function);
 
             $model = \Mage::getModel($model);
+            if (!$model) {
+                $output->writeln('<error>Model name not found. </error>');
+                return;
+            }
+
             $params = explode(',', $input->getArgument('parameters'));
             if (!$method) {
                 $output->writeln('<error>Method name not found. Try methods below:</error>');
@@ -58,7 +63,12 @@ class ExecCommand extends AbstractMagentoCommand
                 }
 
             } else {
-                call_user_func_array(array($model, $method), $params);
+                $res = call_user_func_array(array($model, $method), $params);
+
+                if (!empty($res)) {
+                    echo $res;
+                }
+
                 $output->writeln('<info>done</info>');
             }
         }

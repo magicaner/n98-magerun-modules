@@ -9,7 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Console\Input\StringInput;
-use N98\Util\Filesystem;
 
 class EnableCommand extends AbstractMagentoCommand
 {
@@ -17,8 +16,10 @@ class EnableCommand extends AbstractMagentoCommand
 
     public $pathsForGitIgnore = [
         'app/etc/modules/Magneto_Debug.xml',
-        'app/design/frontend/base/default/template/debug*',
         'app/design/frontend/base/default/layout/debug.xml',
+        'app/design/frontend/base/default/template/debug*',
+        'app/design/adminhtml/base/default/layout/debug.xml',
+        'app/design/adminhtml/base/default/template/debug*',
         'app/code/community/Magneto*',
         'skin/frontend/base/default/debug*'
     ];

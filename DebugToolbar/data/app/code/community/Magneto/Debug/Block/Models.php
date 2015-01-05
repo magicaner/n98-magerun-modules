@@ -25,7 +25,7 @@
  * @package Magneto_Debug
  * @author Misha Medgitov <medgitov@gmail.com>
  */
-class Magneto_Debug_Block_Models extends Mage_Core_Block_Template
+class Magneto_Debug_Block_Models extends Magneto_Debug_Block_Abstract
 {
     const SQL_SELECT_ACTION = 'viewSqlSelect';
     const SQL_EXPLAIN_ACTION = 'viewSqlExplain';

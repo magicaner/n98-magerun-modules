@@ -17,6 +17,8 @@ class RemoveCommand extends AbstractMagentoCommand
 	   'app/code/community/Magneto',
 	   'app/design/frontend/base/default/layout/debug.xml',
 	   'app/design/frontend/base/default/template/debug',
+	   'app/design/adminhtml/base/default/layout/debug.xml',
+	   'app/design/adminhtml/base/default/template/debug',
 	   'app/etc/modules/Magneto_Debug.xml'
     ];
 
