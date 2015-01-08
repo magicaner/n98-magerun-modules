@@ -463,7 +463,8 @@
     padding:2px;
 }
 
-.djDebugToolbarPopup .btn-close{
+.djDebugToolbarPopup .btn-close,
+.djDebugToolbarPopup .btn-close:hover{
     position:absolute;
     border:1px solid #B08E00;
     color:#FFFFFF;
@@ -471,14 +472,13 @@
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     border-radius: 15px;
-    font-size: 23px;
-    line-height: 19px;
-    padding: 2px 3px 0 4px;
     right: -11px;
     top: -11px;
-}    
+    font-size: 32px;
+    line-height: 1;
+    padding: 0 7px 6px 6px;
+    text-decoration: none;
 }
-
 
 
 

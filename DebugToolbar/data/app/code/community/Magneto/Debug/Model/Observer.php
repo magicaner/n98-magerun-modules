@@ -302,11 +302,13 @@ class Magneto_Debug_Model_Observer
      */
     public function onAfterToHtml(Varien_Event_Observer $event)
     {
+        return;
         if (Mage::app()->getStore()->isAdmin()) {
             return;
         }
-
-
+        if (Mage::app()->getRequest()->isAjax()) {
+            return;
+        }
 
         /* @var $block Mage_Core_Block_Template */
 
@@ -323,6 +325,12 @@ class Magneto_Debug_Model_Observer
         if ($block instanceof Mage_Core_Block_Profiler) {
             return;
         }
+
+        if (preg_match('/scripts/', $block->getNameInLayout())) {
+            return;
+        }
+
+
 
         $absoluteFilepath = Mage::getBaseDir('design') . DIRECTORY_SEPARATOR .  $block->getTemplateFile();
         $absoluteFilepath = Mage::helper('debug')->fixAbsolutePath($absoluteFilepath);
@@ -360,8 +368,8 @@ class Magneto_Debug_Model_Observer
             $id = self::$id;
             self::$id++;
 
-            $scriptStart = '<script type="djDebug-start" data-id="' . $id . '" data-debug="' . htmlentities($blockJson) . '"></script>';
-            $scriptEnd = '<script type="djDebug-end" data-id="' . $id . '"></script>';
+            $scriptStart = '<script style="display:none;" data-type="djDebug-start" data-id="' . $id . '" data-debug="' . htmlentities($blockJson) . '"></script>';
+            $scriptEnd = '<script style="display:none;" data-type="djDebug-end" data-id="' . $id . '"></script>';
 
             $html = $scriptStart . $html . $scriptEnd;
         }

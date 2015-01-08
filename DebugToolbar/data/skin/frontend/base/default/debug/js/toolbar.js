@@ -250,19 +250,19 @@
 		eachChildren: function(element, callback) {
             $(element).each(function(){
                 var script = $(this);
-                var endpointSelector = 'script[type="djDebug-end"][data-id="'+ script.attr('data-id') +'"]';
+                var endpointSelector = 'script[data-type="djDebug-end"][data-id="'+ script.attr('data-id') +'"]';
                 script.nextUntil(endpointSelector).each(function(){
                     $.proxy(callback, this, script).call();
                 });
-                $(endpointSelector, element).remove();
-                //script.remove();
+                $(endpointSelector).remove();
+                script.remove();
             });
 		},
 		setBlockHovers: function(element) {
             var self = this;
             var needAddHover = true;
-            var startSelector = 'script[type="djDebug-start"]';
-            var endSelector = 'script[type="djDebug-end"]';
+            var startSelector = 'script[data-type="djDebug-start"]';
+            var endSelector = 'script[data-type="djDebug-end"]';
             var startSelectorStack = []; 
             this.eachChildren($(element).find(startSelector), function(script){
                 var element = $(this);
