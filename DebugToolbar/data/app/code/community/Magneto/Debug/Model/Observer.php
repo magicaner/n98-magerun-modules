@@ -302,7 +302,6 @@ class Magneto_Debug_Model_Observer
      */
     public function onAfterToHtml(Varien_Event_Observer $event)
     {
-        return;
         if (Mage::app()->getStore()->isAdmin()) {
             return;
         }
