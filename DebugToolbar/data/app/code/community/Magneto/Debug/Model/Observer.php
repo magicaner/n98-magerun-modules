@@ -311,7 +311,7 @@ class Magneto_Debug_Model_Observer
 
         /* @var $block Mage_Core_Block_Template */
 
-        $ignoreTags = ['script','style','meta','head','!DOCTYPE'];
+        $blockTags = ['html'];
 
         $transport = $event->getTransport();
         $html = $transport->getHtml();
@@ -331,7 +331,13 @@ class Magneto_Debug_Model_Observer
 
 
 
+
         $absoluteFilepath = Mage::getBaseDir('design') . DIRECTORY_SEPARATOR .  $block->getTemplateFile();
+
+        if (!file_exists($absoluteFilepath) || !$block->getTemplateFile()) {
+            return;
+        }
+
         $absoluteFilepath = Mage::helper('debug')->fixAbsolutePath($absoluteFilepath);
 
         $data = [
@@ -349,11 +355,11 @@ class Magneto_Debug_Model_Observer
             $pattern = '/^(.*?)<([^!<>\s]+)(\s*.*?>.*)$/imsu';
             $html = preg_replace_callback(
                 $pattern,
-                function($matches) use ($ignoreTags, $blockJson) {
+                function($matches) use ($blockTags, $blockJson) {
                     $tag = trim($matches[2]);
 
-                    if (!$tag || in_array($matches[2], $ignoreTags)) {
-                        return $matches[0];
+                    if (!in_array($matches[2], $blockTags)) {
+                        return $this->_wrapBlock($blockJson, $matches[0]);
                     }
 
                     $html = $matches[1] . '<' . $matches[2] . ' data-debug="' . htmlentities($blockJson) . '"' . $matches[3];
@@ -364,15 +370,22 @@ class Magneto_Debug_Model_Observer
             );
         } else {
 
-            $id = self::$id;
-            self::$id++;
-
-            $scriptStart = '<script style="display:none;" data-type="djDebug-start" data-id="' . $id . '" data-debug="' . htmlentities($blockJson) . '"></script>';
-            $scriptEnd = '<script style="display:none;" data-type="djDebug-end" data-id="' . $id . '"></script>';
-
-            $html = $scriptStart . $html . $scriptEnd;
+            $html = $this->_wrapBlock($blockJson, $html);
         }
         $transport->setHtml($html);
+    }
+
+    private function _wrapBlock($blockJson, $html)
+    {
+        $id = self::$id;
+        self::$id++;
+
+        $scriptStart = '<script style="display:none;" data-type="djDebug-start" data-id="' . $id . '" data-debug="' . htmlentities($blockJson) . '"></script>';
+        $scriptEnd = '<script style="display:none;" data-type="djDebug-end" data-id="' . $id . '"></script>';
+
+        $html = $scriptStart . $html . $scriptEnd;
+
+        return $html;
     }
 
     /**

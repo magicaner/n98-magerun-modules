@@ -130,6 +130,26 @@
 	opacity:1.0;
 }
 
+#djDebug a#djDebugInspectButton{
+    background:#9D9D9D url(../img/inspect.png) no-repeat 1px 0;
+    border: 1px solid #000000;
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 10px;
+    margin: 4px;
+    padding: 7px 0 7px 7px;
+    text-indent: -9999999px;
+    outline: 0;
+}
+  
+#djDebug a#djDebugInspectButton:hover{
+    background-color: #FF9F33;
+}
+#djDebug a#djDebugInspectButton.active{
+    background-color: #F13047;
+}
+
 #djDebug code {
 	display:block;
 	font-family:Consolas, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
@@ -463,12 +483,14 @@
     padding:2px;
 }
 
-.djDebugToolbarPopup .btn-close,
-.djDebugToolbarPopup .btn-close:hover{
+.djDebugToolbarPopup .btn-close{
+    outline: 0;
+    text-indent: -99999999px;
     position:absolute;
+    display:block;
     border:1px solid #B08E00;
     color:#FFFFFF;
-    background: #B08E00;
+    background: #B08E00 url(../img/btn_popup_close.png) no-repeat 0 0;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     border-radius: 15px;
@@ -476,10 +498,15 @@
     top: -11px;
     font-size: 32px;
     line-height: 1;
-    padding: 0 7px 6px 6px;
     text-decoration: none;
+    padding:0;
+    width:24px; height:24px;
 }
 
+
+.djDebugToolbarPopup .btn-close: hover{
+  
+}
 
 
 .djDebugToolbarPopup table td {
@@ -487,6 +514,17 @@
     
 }
 .djDebugHover{
+  border:1px solid #FF9F33;
 }
 .djDebugHover-selected{
+}
+.djDebugToolbarPopup .highlightBtn {
+  padding: 3px;
+  font-weight:bold;
+  text-decoration: underline;
+  border:1px solid #FF9F33;    
+}
+.djDebugToolbarPopup .highlightBtn:hover {
+  background:#FF9F33;
+  
 }

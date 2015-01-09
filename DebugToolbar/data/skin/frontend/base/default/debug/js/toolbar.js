@@ -20,6 +20,7 @@
 	var COOKIE_NAME = 'djdt';
 	var djdt = {
         popup: null,
+        inspector:false,
 		initRemoteCallEvent: function(context) {
 			var self = this;
 			context = context || '#djDebug';
@@ -146,7 +147,7 @@
 			} else {
 				djdt.show_toolbar(false);
 			}
-			this.initHover(document);
+			this.initInspector(document);
 		},
 		toggle_content: function(elem) {
 			if (elem.is(':visible')) {
@@ -207,7 +208,9 @@
 		    this.popup = $('<div class="djDebugToolbarPopup"><a href="#close" class="btn-close">&times;</a></div>').appendTo('body');
 
 		    var table = $('<table></table>').appendTo(this.popup);
+            var j = 0; 
 		    $(elements).each(function() {
+                var block = $(this);
                 var data = $(this).attr('data-debug');
                 if (!$.isNumeric(data)) {
                     data = [eval('(' + data + ')')];
@@ -215,15 +218,26 @@
                     data = $(this).data('debug');
                 }
                 
-                
-                
 		        for (var i = 0; i< data.length; i++) {
 		            var d = data[i];
-    		        table.append('<tr><td>class</td><td><span>'+ d.class +'</span></td></tr>');
-    	            table.append('<tr><td>name</td><td><span>'+ d.name +'</span></td></tr>');
-    	            table.append('<tr><td>alias</td><td><span>'+ d.alias +'</span></td></tr>');
-    	            table.append('<tr><td>template</td><td><span>'+ d.template +'</span></td></tr>');
-    	            table.append('<tr><td colspan="2"> ----------------------- </td></tr>');
+                    
+                    if (j) {
+                        table.append('<tr><td colspan="2"> &darr; </td></tr>');
+                    }
+                    var a = $('<a class="highlightBtn">highlight</a>');
+                    a.hover(function(){
+                        block.addClass('djDebugHover');
+                    }, function(){
+                        block.removeClass('djDebugHover');
+                    });
+                    
+    		        var tr = $('<tr></tr>')
+                    var td = $('<td></td>').append(a).appendTo(tr);
+                    table.append(tr);
+                    for (var k in d) {
+    		          table.append('<tr><td>'+ k +'</td><td><span>'+ d[k] +'</span></td></tr>');
+                    }
+    	            j++;   
 		        }
 		    });
 		    
@@ -246,6 +260,7 @@
 		         $(this.popup).hide().remove();
 		         this.popup = null;
 		     }  
+             $('.djDebugHover').removeClass('djDebugHover');
 		},
 		eachChildren: function(element, callback) {
             $(element).each(function(){
@@ -260,27 +275,17 @@
 		},
 		setBlockHovers: function(element) {
             var self = this;
-            var needAddHover = true;
             var startSelector = 'script[data-type="djDebug-start"]';
             var endSelector = 'script[data-type="djDebug-end"]';
-            var startSelectorStack = []; 
+            
             this.eachChildren($(element).find(startSelector), function(script){
                 var element = $(this);
-                if (element.is(startSelector)) {
-                    startSelectorStack.unshift(element);
-                }
-                
-                if (element.is(endSelector) && startSelectorStack.length > 0) {
-                    startSelectorStack.shift();
-                }
                 
                 if (element.is('script,link,meta')) {
                     return;
                 }
-                
-                if (startSelectorStack.length == 0) {
-                    self.addHover(element, script);
-                }
+               
+                self.addHover(element, script);
             });
             
             
@@ -303,28 +308,47 @@
             element.attr('data-debug',script.attr('data-id'));
             element.data('debug', existingData);
 		},
-		initHover: function(element) {
+        activateInspector: function() {
+            $(window).bind('click', this.showInspector);
+            this.inspector = true;
+            $('#djDebugInspectButton').addClass('active');
+        },
+        deactivateInspector: function() {
+            $(window).unbind('click', this.showInspector);
+            this.inspector = false;
+            $('#djDebugInspectButton').removeClass('active');
+        },
+		initInspector: function(element) {
 		    var self = this;
 		    this.setBlockHovers(element);
+            
+            this.showInspector = $.proxy(this.showInspector, this);
 		    
-		    $(window).click(function(e) {
-		        /*if (!$('#djDebugToolbar').is(':visible')) {
-		            return;
-		        }*/
-		        if (e.which == 3 && e.ctrlKey) {
-		            self.hidePopup(e);
-		            var parents = $(e.target).parents('[data-debug]');
-		            if (parents.length > 0) {
-		                self.showPopup(parents,e);
-		            }
-		            return false;
-		        } else if(e.which == 3 && e.ctrlKey) {
-		            this.unhighLighBlock();
-                    self.hidePopup(e);
-                    return false;
+            $('#djDebugInspectButton').click(function(e){
+                e.stopPropagation();
+                if (self.inspector == false) {
+                    self.activateInspector();
+                } else {
+                    self.deactivateInspector();
                 }
-		    });
+            });
 		},
+        showInspector: function(e) {
+            if ($(e.target) == $('#djDebugInspectButton')) {
+                return true;
+            }
+            
+            var self = this;
+            self.hidePopup(e);
+            var parents = $(e.target).parents('[data-debug]');
+            if (parents.length > 0) {
+                self.showPopup(parents,e);
+            }
+            
+            self.deactivateInspector();
+            e.stopPropagation();
+            return false;
+        },
 		highLighBlock: function(element){
 		    this.unhighLighBlock();
 		    $(element).addClass('djDebugHover-selected'); 
@@ -339,8 +363,17 @@
 		    element.css("left", Math.max(0, (($(window).width() - $(element).outerWidth()) / 2) + 
 		                                                    $(window).scrollLeft()) + "px");*/
 		    
-		    element.css("top", (e.pageY - $(element).outerHeight() / 2) + "px");
-		    element.css("left", (e.pageX - $(element).outerWidth() / 2) + "px");
+            var top = (e.pageY - $(element).outerHeight() / 2);
+            if (top<=0) {
+                top = 20;
+            }
+            
+            var left = (e.pageX - $(element).outerWidth() / 2);
+            if (left<=0) {
+                left = 20;
+            }
+		    element.css("top", top + "px");
+		    element.css("left", left + "px");
             return element;
 		}
 		
