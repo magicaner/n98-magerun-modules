@@ -227,8 +227,10 @@
                     var a = $('<a class="highlightBtn">highlight</a>');
                     a.hover(function(){
                         block.addClass('djDebugHover');
+                        self.popup.addClass('invisible');
                     }, function(){
                         block.removeClass('djDebugHover');
+                        self.popup.removeClass('invisible');
                     });
                     
     		        var tr = $('<tr></tr>')
