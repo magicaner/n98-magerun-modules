@@ -37,8 +37,8 @@ var DEBUG_TOOLBAR_MEDIA_URL = "<?php echo $this->getDebugMediaUrl(); ?>";
 		</ul>
 	</div>
 	<div style="display:none;" id="djDebugToolbarHandle">
-        <a title="<?php echo $this->__("Show Toolbar"); ?>" id="djShowToolBarButton" href="#">&laquo;</a>
-        <a title="<?php echo $this->__("Inspect"); ?>" id="djDebugInspectButton" href="#">i</a>
+        <a title="<?php echo $this->__("Show Toolbar"); ?>" id="djShowToolBarButton" href="javascript:;">&laquo;</a>
+        <a title="<?php echo $this->__("Inspect"); ?>" id="djDebugInspectButton" href="javascript:;">i</a>
 	</div>
     <?php foreach ($panels as $panel): ?>
         <?php if( $panel['has_content'] ): ?>

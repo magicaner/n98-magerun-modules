@@ -205,7 +205,7 @@
             var self = this;
             this.hidePopup();
 
-            this.popup = $('<div class="djDebugToolbarPopup"><a href="#close" class="btn-close">&nbsp;</a></div>').appendTo('body');
+            this.popup = $('<div class="djDebugToolbarPopup"><a href="javascript:;" class="btn-close">&nbsp;</a></div>').appendTo('body');
 
             var table = $('<table></table>').appendTo(this.popup);
             var j = 0;
@@ -252,7 +252,7 @@
             $(this.popup).on('dblclick', 'td span', function(e) {
                 self.select(this);
             })
-            $(this.popup).on('click', 'a[href$=#close]', function(e) {
+            $(this.popup).on('click', 'a.btn-close', function(e) {
                 self.hidePopup(e);
             })
             self.position($(this.popup), e).show();
@@ -333,6 +333,7 @@
                 } else {
                     self.deactivateInspector();
                 }
+                return false;
             });
         },
         showInspector: function(e) {
