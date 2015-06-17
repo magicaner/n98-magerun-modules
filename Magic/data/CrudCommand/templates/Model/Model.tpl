@@ -9,7 +9,7 @@ class {{model_class_name}}
      */
     protected function _construct()
     {
-        $this->_init('{{module}}/{{model}}');
+        $this->_init('{{module_alias}}/{{model}}');
     }
 
 }

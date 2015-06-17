@@ -9,7 +9,7 @@ class {{block_admin_edit_form_class_name}}
      */
     protected function _prepareForm()
     {
-        /* @var $helper {{helper_data_class_name} */
+        /* @var $helper {{helper_data_class_name}} */
 
         $form = new Varien_Data_Form();
 

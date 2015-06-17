@@ -9,7 +9,7 @@ class {{model_resource_class_name}}
      */
     public function _construct()
     {
-        $this->_init('{{module}}/{{table}}', '{{primarykey}}');
+        $this->_init('{{module_alias}}/{{table}}', '{{primarykey}}');
     }
 
     /**

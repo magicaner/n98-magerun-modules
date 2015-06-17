@@ -9,6 +9,6 @@ class {{model_resource_collection_class_name}}
      */
     public function _construct()
     {
-        $this->_init('{{module}}/{{model}}');
+        $this->_init('{{module_alias}}/{{model}}');
     }
 }

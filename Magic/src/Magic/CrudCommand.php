@@ -22,6 +22,11 @@ class CrudCommand extends AbstractMagentoCommand
     private $_applicationPaths = null;
     private $_templatePaths = null;
 
+    /**
+     * @var InputInterface
+     */
+    protected $_input = null;
+
     public $templates = [
             'helper_data' => 'Helper/Data',
             'model' => 'Model/{{model}}',
@@ -46,6 +51,7 @@ class CrudCommand extends AbstractMagentoCommand
             ->addArgument('model', InputArgument::REQUIRED, 'Model name')
 
             ->addOption('menu', 'menu', InputOption::VALUE_OPTIONAL, 'Selected admin menu')
+            ->addOption('force', 'force', InputOption::VALUE_OPTIONAL, 'Rewrite existing files', false)
 
         ->setDescription('Create CRUD for given table and model name')
         ;
@@ -162,7 +168,12 @@ class CrudCommand extends AbstractMagentoCommand
         $paths = $this->getApplicationPaths();
         $file = new FileSystem();
         if (isset($paths[$name])) {
-            $file->filewrite($paths[$name], $content);
+            $fileExists = file_exists($paths[$name]);
+            if (!$fileExists) {
+                $file->filewrite($paths[$name], $content);
+            } elseif ($this->getInput()->getOption('force')) {
+                $file->filewrite($paths[$name], $content);
+            }
         } else {
             throw new \Exception('Path for \'' . $name . '\' not found');
         }
@@ -170,9 +181,10 @@ class CrudCommand extends AbstractMagentoCommand
 
     protected function initVariables(InputInterface $input)
     {
-        $module = $input->getArgument('module');
-        $model = $input->getArgument('model');
-        $table = $input->getArgument('table');
+        $this->_input = $input;
+        $module = $this->_input->getArgument('module');
+        $model = $this->_input->getArgument('model');
+        $table = $this->_input->getArgument('table');
 
         @list($module, $moduleAlias) = @explode(':', $module);
         if (!$moduleAlias) {
@@ -185,7 +197,7 @@ class CrudCommand extends AbstractMagentoCommand
             'model' => $model,
             'table' => $table,
             'primarykey' => $this->_getTablePrimaryKey($table),
-            'menu' => $input->getOption('menu'),
+            'menu' => $this->_input->getOption('menu'),
 
             'model_class_name' => $this->_generateModelClassName($module, $model),
             'model_resource_class_name' => $this->_generateModelResourceClassName($module, $model),
@@ -326,5 +338,15 @@ class CrudCommand extends AbstractMagentoCommand
     private function uc_words($str, $destSep='_', $srcSep='_')
     {
         return str_replace(' ', $destSep, ucwords(str_replace($srcSep, ' ', $str)));
+    }
+
+    /**
+     * input
+     *
+     * @return InputInterface
+     */
+    public function getInput()
+    {
+        return $this->_input;
     }
 }
