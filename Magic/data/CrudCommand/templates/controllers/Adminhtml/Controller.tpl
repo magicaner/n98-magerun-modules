@@ -9,7 +9,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     public function _initAction()
     {
         $this->loadLayout()
-            ->_setActiveMenu('{{menu}}');
+             ->_setActiveMenu('{{menu}}');
 
         $this->_title($this->__(''));
     }

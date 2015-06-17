@@ -19,7 +19,7 @@ class  {{block_admin_edit_class_name}}
         $this->_updateButton('save', 'label', $this->helper('{{module_alias}}')->__('Save'));
         $this->_updateButton('delete', 'label', $this->helper('{{module_alias}}')->__('Delete'));
 
-        /* @var $model Ecommeleon_Sponsor_Model_RecurringCredit */
+        /* @var $model {{model_class_name}} */
 
         if ($this->getRequest()->getParam($this->_objectId)) {
             $model = Mage::getModel('{{module_alias}}/{{model}}');

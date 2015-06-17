@@ -40,7 +40,6 @@ class {{block_admin_grid_class_name}}
         ));
     }
 
-
     /**
      * Define grid columns
      *

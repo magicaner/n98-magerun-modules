@@ -9,7 +9,7 @@ class {{block_admin_edit_form_class_name}}
      */
     protected function _prepareForm()
     {
-        /* @var $helper Ecommeleon_Sponsor_Helper_Data */
+        /* @var $helper {{helper_data_class_name} */
 
         $form = new Varien_Data_Form();
 
@@ -19,9 +19,9 @@ class {{block_admin_edit_form_class_name}}
 
         $fieldset->addField('name', 'text', array(
             'name'      => 'name',
-            'title'     => $helper->__('Customer name'),
-            'label'     => $helper->__('Customer name'),
-            'note'      => $helper->__('Will be used in email notification'),
+            'title'     => $helper->__('Field name'),
+            'label'     => $helper->__('Field name'),
+            'note'      => $helper->__('Comment text should be here'),
             'required'  => false,
         ));
 

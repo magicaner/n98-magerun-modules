@@ -1,6 +1,7 @@
 <?php
 namespace Magic;
 
+use DebugToolbar\FileSystem;
 use N98\Magento\Command\AbstractMagentoCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,14 +74,14 @@ class CrudCommand extends AbstractMagentoCommand
 
     protected function getTemplatesPath()
     {
-        return $this->getDataPath().'/templates';
+        return $this->getDataPath() . '/templates';
     }
 
     protected function getTemplatePath($name)
     {
         if (isset($this->templates[$name])) {
             $path = str_replace('/', DIRECTORY_SEPARATOR, $this->templates[$name]);
-            return $this->getTemplatesPath().DIRECTORY_SEPARATOR.$path.$this->templateExtension;
+            return $this->getTemplatesPath() . DIRECTORY_SEPARATOR . $path . $this->templateExtension;
         } else {
             return false;
         }
@@ -96,7 +97,7 @@ class CrudCommand extends AbstractMagentoCommand
 
         foreach ($paths as &$path) {
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-            $path = $this->getTemplatesPath().DIRECTORY_SEPARATOR.$path.$this->templateExtension;
+            $path = $this->getTemplatesPath() . DIRECTORY_SEPARATOR . $path . $this->templateExtension;
 
             $path = str_replace(['{{model}}', '{{controller}}'], ['Model', 'Controller'], $path);
         }
@@ -113,11 +114,12 @@ class CrudCommand extends AbstractMagentoCommand
 
         $moduleName = $this->uc_words($this->_vars['module']);
         $codePool = (string)\Mage::app()->getConfig()->getModuleConfig($moduleName)->codePool;
-        $moduleDir = \Mage::app()->getConfig()->getOptions()->getCodeDir().DS.$codePool.DS.$this->uc_words($moduleName,'/','_');
+        $moduleDir = \Mage::app()->getConfig()->getOptions()->getCodeDir()
+                    . DS . $codePool . DS . $this->uc_words($moduleName,'/','_');
 
         foreach ($paths as &$path) {
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-            $path = $moduleDir.DS.$path.$this->phpExtension;
+            $path = $moduleDir . DS . $path . $this->phpExtension;
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
@@ -162,7 +164,7 @@ class CrudCommand extends AbstractMagentoCommand
         if (isset($paths[$name])) {
             $file->filewrite($paths[$name], $content);
         } else {
-            throw new \Exception('Path for \''.$name.'\' not found');
+            throw new \Exception('Path for \'' . $name . '\' not found');
         }
     }
 
@@ -177,20 +179,12 @@ class CrudCommand extends AbstractMagentoCommand
             $moduleAlias = $module;
         }
 
-        $resource = \Mage::getSingleton('core/resource');
-
-        if (strpos($table,'/') === false) {
-            $table = $resource->getTableName($moduleAlias.'/'.$table);
-        } else {
-            $table = $resource->getTableName($table);
-        }
-
         $this->_vars = [
             'module' => $module,
             'module_alias' => $moduleAlias,
             'model' => $model,
             'table' => $table,
-            'primarykey' => $this->_getTablePrimaryKey($module, $table),
+            'primarykey' => $this->_getTablePrimaryKey($table),
             'menu' => $input->getOption('menu'),
 
             'model_class_name' => $this->_generateModelClassName($module, $model),
@@ -266,20 +260,11 @@ class CrudCommand extends AbstractMagentoCommand
         return $this->uc_words($module).'_Adminhtml_'.$this->uc_words($model).'Controller';
     }
 
-    private function _getTablePrimaryKey($module, $table)
+    private function _getTablePrimaryKey($tableName)
     {
         $resource = \Mage::getSingleton('core/resource');
 
         $connection = $resource->getConnection('core_read');
-
-        if (strpos($table,'/') === false) {
-            $tableName = $resource->getTableName($module.'/'.$table);
-        } else {
-            $tableName = $resource->getTableName($table);
-        }
-
-
-
 
         $indexes = $connection->getIndexList($tableName);
         if (isset($indexes['PRIMARY']) && isset($indexes['PRIMARY']['fields']) ) {
