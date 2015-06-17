@@ -83,7 +83,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
                 Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} successfully created'));
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
                 return;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
         }
@@ -121,7 +121,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
                 return;
-            } catch (Exception $e){
+            } catch (Exception $e) {
                 Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
             }
         }
@@ -146,7 +146,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
             $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
             return;
-        } catch (Exception $e){
+        } catch (Exception $e) {
             Mage::getSingleton('adminhtml/session')->addError($e->getMessage());
         }
 
