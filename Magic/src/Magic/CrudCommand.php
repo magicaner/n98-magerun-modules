@@ -191,11 +191,17 @@ class CrudCommand extends AbstractMagentoCommand
             $moduleAlias = $module;
         }
 
+        @list($table, $tableAlias) = @explode(':', $table);
+        if (!$tableAlias) {
+            $tableAlias = $table;
+        }
+
         $this->_vars = [
             'module' => $module,
             'module_alias' => $moduleAlias,
             'model' => $model,
             'table' => $table,
+            'table_alias' => $tableAlias,
             'primarykey' => $this->_getTablePrimaryKey($table),
             'menu' => $this->_input->getOption('menu'),
 
@@ -291,10 +297,10 @@ class CrudCommand extends AbstractMagentoCommand
     private function _generateBlockName($model, $blockName)
     {
         $patterns = [
-            'block_admin_grid_container' => 'block_adminhtml_{{model}}',
-            'block_admin_grid' => 'block_adminhtml_{{model}}_grid',
-            'block_admin_edit' => 'block_adminhtml_{{model}}_edit',
-            'block_admin_edit_form' => 'block_adminhtml_{{model}}_edit_form'
+            'block_admin_grid_container' => 'adminhtml_{{model}}',
+            'block_admin_grid' => 'adminhtml_{{model}}_grid',
+            'block_admin_edit' => 'adminhtml_{{model}}_edit',
+            'block_admin_edit_form' => 'adminhtml_{{model}}_edit_form'
         ];
 
         if (isset($patterns[$blockName])) {
