@@ -217,7 +217,6 @@ class CrudCommand extends AbstractMagentoCommand
             'block_admin_edit_form_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit_form'),
             'block_admin_grid_container_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid_container'),
         ];
-
     }
 
     protected function getVariableValue($variable)
@@ -297,7 +296,7 @@ class CrudCommand extends AbstractMagentoCommand
             'block_admin_edit_form' => 'block_adminhtml_{{model}}_edit_form',
         ];
 
-        if (isset($patterns[$blockName])) {
+        if (array_key_exists($blockName, $patterns)) {
             return str_replace('{{model}}', $model, $patterns[$blockName]);
         } else {
             return $blockName;
