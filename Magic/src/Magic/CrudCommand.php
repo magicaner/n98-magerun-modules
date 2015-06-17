@@ -207,16 +207,17 @@ class CrudCommand extends AbstractMagentoCommand
 
             'admin_controller' => 'adminhtml_' . $model,
 
-            'block_admin_grid_container' => $this->_generateBlockName($module, $model, 'block_admin_grid_container'),
-            'block_admin_grid' => $this->_generateBlockName($module, $model, 'block_admin_grid'),
-            'block_admin_edit' => $this->_generateBlockName($module, $model, 'block_admin_edit'),
-            'block_admin_edit_form' => $this->_generateBlockName($module, $model, 'block_admin_edit_form'),
+            'block_admin_grid_container' => $this->_generateBlockName($model, 'block_admin_grid_container'),
+            'block_admin_grid' => $this->_generateBlockName($model, 'block_admin_grid'),
+            'block_admin_edit' => $this->_generateBlockName($model, 'block_admin_edit'),
+            'block_admin_edit_form' => $this->_generateBlockName($model, 'block_admin_edit_form'),
 
             'block_admin_grid_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid'),
             'block_admin_edit_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit'),
             'block_admin_edit_form_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit_form'),
             'block_admin_grid_container_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid_container'),
         ];
+
     }
 
     protected function getVariableValue($variable)
@@ -293,10 +294,10 @@ class CrudCommand extends AbstractMagentoCommand
             'block_admin_grid_container' => 'block_adminhtml_{{model}}',
             'block_admin_grid' => 'block_adminhtml_{{model}}_grid',
             'block_admin_edit' => 'block_adminhtml_{{model}}_edit',
-            'block_admin_edit_form' => 'block_adminhtml_{{model}}_edit_form',
+            'block_admin_edit_form' => 'block_adminhtml_{{model}}_edit_form'
         ];
 
-        if (array_key_exists($blockName, $patterns)) {
+        if (isset($patterns[$blockName])) {
             return str_replace('{{model}}', $model, $patterns[$blockName]);
         } else {
             return $blockName;
