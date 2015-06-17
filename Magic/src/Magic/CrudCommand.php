@@ -205,7 +205,7 @@ class CrudCommand extends AbstractMagentoCommand
             'admin_controller_class_name' => $this->_generateAdminControllerClassName($module, $model),
             'helper_data_class_name' => $this->_generatHelperClassName($module, 'data'),
 
-            'admin_controller' => 'adminhtml_'.$model,
+            'admin_controller' => 'adminhtml_' . $model,
 
             'block_admin_grid_container' => $this->_generateBlockName($module, $model, 'block_admin_grid_container'),
             'block_admin_grid' => $this->_generateBlockName($module, $model, 'block_admin_grid'),
@@ -322,7 +322,7 @@ class CrudCommand extends AbstractMagentoCommand
 
     private function _generatHelperClassName($module, $name)
     {
-        return $this->uc_words($module.'_Helper_'.$name);
+        return $this->uc_words($module . '_Helper_' . $name);
     }
 
     /**
