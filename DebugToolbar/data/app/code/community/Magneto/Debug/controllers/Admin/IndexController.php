@@ -52,6 +52,9 @@ class Magneto_Debug_Admin_IndexController extends Mage_Adminhtml_Controller_Acti
             ->setPackageName((string)Mage::getConfig()->getNode('stores/admin/design/package/name'))
             ->setTheme((string)Mage::getConfig()->getNode('stores/admin/design/theme/default'))
         ;
+
+        Mage::app()->setCurrentStore(Mage::app()->getStore(Mage_Core_Model_App::ADMIN_STORE_ID));
+
         foreach (array('layout', 'template', 'skin', 'locale') as $type) {
             if ($value = (string)Mage::getConfig()->getNode("stores/admin/design/theme/{$type}")) {
                 Mage::getDesign()->setTheme($type, $value);
