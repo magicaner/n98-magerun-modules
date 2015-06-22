@@ -80,7 +80,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
             try {
                 $model->save();
-                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} successfully created'));
+                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} has been successfully created'));
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
                 return;
             } catch (Exception $e) {
@@ -117,7 +117,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
                 $model->addData($data);
                 $model->save();
-                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} successfully saved'));
+                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} has been successfully saved'));
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
                 return;
@@ -142,7 +142,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
             $model->delete();
 
             Mage::getSingleton('adminhtml/session')
-                ->addSuccess(Mage::helper('{{module_alias}}/data')->__('{{model|ucfirst}} successfully deleted'));
+                ->addSuccess(Mage::helper('{{module_alias}}/data')->__('{{model|ucfirst}} has been successfully deleted'));
             $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
             return;
