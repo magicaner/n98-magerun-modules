@@ -194,6 +194,12 @@ class CrudCommand extends AbstractMagentoCommand
         @list($table, $tableAlias) = @explode(':', $table);
         if (!$tableAlias) {
             $tableAlias = $table;
+        } else {
+            $path = sprintf(
+                'global/models/%s_resource/entities/%s/table',
+                $moduleAlias, $table
+            );
+            $tableAlias = (string)Mage::getConfig()->getNode($path);
         }
 
         $this->_vars = [
