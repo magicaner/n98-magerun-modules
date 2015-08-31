@@ -350,7 +350,8 @@ class Magneto_Debug_Model_Observer
         $blockJson = Zend_Json::encode($data);
 
         if ($block instanceof Mage_Page_Block_Html) {
-            $pattern = '/^(.*?)<([^!<>\s]+)(\s*.*?>.*)$/imsu';
+            // @todo bug: when html is too big than preg_replace fails
+            /*$pattern = '/^(.*?)<([^!<>\s]+)(\s*.*?>.*)$/imsu';
             $html = preg_replace_callback(
                 $pattern,
                 function($matches) use ($blockTags, $blockJson) {
@@ -365,7 +366,7 @@ class Magneto_Debug_Model_Observer
                     return $html;
                 },
                 $html
-            );
+            );*/
         } else {
 
             $html = $this->_wrapBlock($blockJson, $html);
