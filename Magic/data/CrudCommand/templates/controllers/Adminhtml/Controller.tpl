@@ -42,7 +42,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     public function editAction()
     {
         $this->_initAction();
-        $this->_title($this->__('Edit'));
+        $this->_title($this->__('Edit {{model|ucfirst}}'));
 
         $this->_addContent($this->getLayout()->createBlock('{{module_alias}}/{{block_admin_edit}}'));
         $this->renderLayout();
@@ -57,7 +57,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     {
         $this->_initAction();
 
-        $this->_title($this->__('Create'));
+        $this->_title($this->__('Create {{model|ucfirst}}'));
         $this->_addContent($this->getLayout()->createBlock('{{module_alias}}/{{block_admin_edit}}'));
 
         $this->renderLayout();

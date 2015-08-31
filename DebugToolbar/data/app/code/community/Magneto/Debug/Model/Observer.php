@@ -329,15 +329,13 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
-
-
-
         $absoluteFilepath = Mage::getBaseDir('design') . DIRECTORY_SEPARATOR .  $block->getTemplateFile();
 
         if (!file_exists($absoluteFilepath) || !$block->getTemplateFile()) {
             return;
         }
 
+        $absoluteFilepath = str_replace(Mage::getBaseDir(), '', $absoluteFilepath);
         $absoluteFilepath = Mage::helper('debug')->fixAbsolutePath($absoluteFilepath);
 
         $data = [

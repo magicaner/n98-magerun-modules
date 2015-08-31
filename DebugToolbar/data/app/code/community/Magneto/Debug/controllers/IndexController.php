@@ -65,6 +65,8 @@ class Magneto_Debug_IndexController extends Mage_Core_Controller_Front_Action
         $absoluteFilepath = realpath(Mage::getBaseDir('design') . DIRECTORY_SEPARATOR . $fileName);
         $source = highlight_string(file_get_contents($absoluteFilepath), true) ;
 
+        $absoluteFilepath = str_replace(Mage::getBaseDir(), '', $absoluteFilepath);
+
         $this->getResponse()->setBody($this->_debugPanel(
             "Template Source: <code class=\"autoselect\">$fileName</code><br/>\n
             Absolute Path: <code class=\"autoselect\">".Mage::helper('debug')->fixAbsolutePath($absoluteFilepath)."</code>",
@@ -88,6 +90,7 @@ class Magneto_Debug_IndexController extends Mage_Core_Controller_Front_Action
         } else {
             $source = 'Source file not found';
         }
+        $absoluteFilepath = str_replace(Mage::getBaseDir(), '', $absoluteFilepath);
         $this->getResponse()->setBody($this->_debugPanel("Block Source: <code class=\"autoselect\">".$blockClass."</code><br/>\n
             Absolute path: <code class=\"autoselect\">".Mage::helper('debug')->fixAbsolutePath($absoluteFilepath).'</code>', ''.$source.''));
     }
@@ -161,6 +164,7 @@ class Magneto_Debug_IndexController extends Mage_Core_Controller_Front_Action
 
             $result = $fileXml->xpath("/layout/" . $layoutHandle);
             if ($result) {
+                $filename = str_replace(Mage::getBaseDir(), '', $filename);
                 $handleFiles[$filename] = $result;
             }
         }
