@@ -9,4 +9,5 @@ commands:
   customCommands:
     - Magic\ExecCommand
     - Magic\CrudCommand
+    - Magic\ModelCommand
 #    - Magic\IncludeVendorCommand

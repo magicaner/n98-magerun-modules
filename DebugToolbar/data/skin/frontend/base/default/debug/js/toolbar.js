@@ -13,9 +13,195 @@
         };
         document.documentElement.childNodes[0].appendChild(script)
     }
-})(window, document, "1.3", function($, jquery_loaded) {
+})(window, document, "2.1.4", function($, jquery_loaded) {
 
+    // jquery.cookie.js ------------------------------------------------------------------------------------------------
     $.cookie = function(name, value, options) { if (typeof value != 'undefined') { options = options || {}; if (value === null) { value = ''; options.expires = -1; } var expires = ''; if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) { var date; if (typeof options.expires == 'number') { date = new Date(); date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000)); } else { date = options.expires; } expires = '; expires=' + date.toUTCString(); } var path = options.path ? '; path=' + (options.path) : ''; var domain = options.domain ? '; domain=' + (options.domain) : ''; var secure = options.secure ? '; secure' : ''; document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join(''); } else { var cookieValue = null; if (document.cookie && document.cookie != '') { var cookies = document.cookie.split(';'); for (var i = 0; i < cookies.length; i++) { var cookie = $.trim(cookies[i]); if (cookie.substring(0, name.length + 1) == (name + '=')) { cookieValue = decodeURIComponent(cookie.substring(name.length + 1)); break; } } } return cookieValue; } };
+
+    // jquery.json.js --------------------------------------------------------------------------------------------------
+     var escape = /["\\\x00-\x1f\x7f-\x9f]/g,
+        meta = {
+            '\b': '\\b',
+            '\t': '\\t',
+            '\n': '\\n',
+            '\f': '\\f',
+            '\r': '\\r',
+            '"': '\\"',
+            '\\': '\\\\'
+        },
+        hasOwn = Object.prototype.hasOwnProperty;
+
+    /**
+     * jQuery.toJSON
+     * Converts the given argument into a JSON representation.
+     *
+     * @param o {Mixed} The json-serializable *thing* to be converted
+     *
+     * If an object has a toJSON prototype, that will be used to get the representation.
+     * Non-integer/string keys are skipped in the object, as are keys that point to a
+     * function.
+     *
+     */
+    $.toJSON = typeof JSON === 'object' && JSON.stringify ? JSON.stringify : function (o) {
+        if (o === null) {
+            return 'null';
+        }
+
+        var pairs, k, name, val,
+            type = $.type(o);
+
+        if (type === 'undefined') {
+            return undefined;
+        }
+
+        // Also covers instantiated Number and Boolean objects,
+        // which are typeof 'object' but thanks to $.type, we
+        // catch them here. I don't know whether it is right
+        // or wrong that instantiated primitives are not
+        // exported to JSON as an {"object":..}.
+        // We choose this path because that's what the browsers did.
+        if (type === 'number' || type === 'boolean') {
+            return String(o);
+        }
+        if (type === 'string') {
+            return $.quoteString(o);
+        }
+        if (typeof o.toJSON === 'function') {
+            return $.toJSON(o.toJSON());
+        }
+        if (type === 'date') {
+            var month = o.getUTCMonth() + 1,
+                day = o.getUTCDate(),
+                year = o.getUTCFullYear(),
+                hours = o.getUTCHours(),
+                minutes = o.getUTCMinutes(),
+                seconds = o.getUTCSeconds(),
+                milli = o.getUTCMilliseconds();
+
+            if (month < 10) {
+                month = '0' + month;
+            }
+            if (day < 10) {
+                day = '0' + day;
+            }
+            if (hours < 10) {
+                hours = '0' + hours;
+            }
+            if (minutes < 10) {
+                minutes = '0' + minutes;
+            }
+            if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+            if (milli < 100) {
+                milli = '0' + milli;
+            }
+            if (milli < 10) {
+                milli = '0' + milli;
+            }
+            return '"' + year + '-' + month + '-' + day + 'T' +
+                hours + ':' + minutes + ':' + seconds +
+                '.' + milli + 'Z"';
+        }
+
+        pairs = [];
+
+        if ($.isArray(o)) {
+            for (k = 0; k < o.length; k++) {
+                pairs.push($.toJSON(o[k]) || 'null');
+            }
+            return '[' + pairs.join(',') + ']';
+        }
+
+        // Any other object (plain object, RegExp, ..)
+        // Need to do typeof instead of $.type, because we also
+        // want to catch non-plain objects.
+        if (typeof o === 'object') {
+            for (k in o) {
+                // Only include own properties,
+                // Filter out inherited prototypes
+                if (hasOwn.call(o, k)) {
+                    // Keys must be numerical or string. Skip others
+                    type = typeof k;
+                    if (type === 'number') {
+                        name = '"' + k + '"';
+                    } else if (type === 'string') {
+                        name = $.quoteString(k);
+                    } else {
+                        continue;
+                    }
+                    type = typeof o[k];
+
+                    // Invalid values like these return undefined
+                    // from toJSON, however those object members
+                    // shouldn't be included in the JSON string at all.
+                    if (type !== 'function' && type !== 'undefined') {
+                        val = $.toJSON(o[k]);
+                        pairs.push(name + ':' + val);
+                    }
+                }
+            }
+            return '{' + pairs.join(',') + '}';
+        }
+    };
+
+    /**
+     * jQuery.evalJSON
+     * Evaluates a given json string.
+     *
+     * @param str {String}
+     */
+    $.evalJSON = typeof JSON === 'object' && JSON.parse ? JSON.parse : function (str) {
+        /*jshint evil: true */
+        return eval('(' + str + ')');
+    };
+
+    /**
+     * jQuery.secureEvalJSON
+     * Evals JSON in a way that is *more* secure.
+     *
+     * @param str {String}
+     */
+    $.secureEvalJSON = typeof JSON === 'object' && JSON.parse ? JSON.parse : function (str) {
+        var filtered =
+            str
+                .replace(/\\["\\\/bfnrtu]/g, '@')
+                .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']')
+                .replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+
+        if (/^[\],:{}\s]*$/.test(filtered)) {
+            /*jshint evil: true */
+            return eval('(' + str + ')');
+        }
+        throw new SyntaxError('Error parsing JSON, source is not valid.');
+    };
+
+    /**
+     * jQuery.quoteString
+     * Returns a string-repr of a string, escaping quotes intelligently.
+     * Mostly a support function for toJSON.
+     * Examples:
+     * >>> jQuery.quoteString('apple')
+     * "apple"
+     *
+     * >>> jQuery.quoteString('"Where are we going?", she asked.')
+     * "\"Where are we going?\", she asked."
+     */
+    $.quoteString = function (str) {
+        if (str.match(escape)) {
+            return '"' + str.replace(escape, function (a) {
+                    var c = meta[a];
+                    if (typeof c === 'string') {
+                        return c;
+                    }
+                    c = a.charCodeAt();
+                    return '\\u00' + Math.floor(c / 16).toString(16) + (c % 16).toString(16);
+                }) + '"';
+        }
+        return '"' + str + '"';
+    };
+
+    // toolbar.js ------------------------------------------------------------------------------------------------------
     $('head').append('<link rel="stylesheet" href="'+DEBUG_TOOLBAR_MEDIA_URL+'css/toolbar.css" type="text/css" />');
     var COOKIE_NAME = 'djdt';
     var djdt = {
@@ -213,9 +399,9 @@
                 var block = $(this);
                 var data = $(this).attr('data-debug');
                 if (!$.isNumeric(data)) {
-                    data = [eval('(' + data + ')')];
+                    data = $.evalJSON(data);
                 } else {
-                    data = $(this).data('debug');
+                    data = $(this).attr('debug');
                 }
 
                 for (var i = 0; i< data.length; i++) {
@@ -264,6 +450,7 @@
              }
              $('.djDebugHover').removeClass('djDebugHover');
         },
+
         eachChildren: function(element, callback) {
             $(element).each(function(){
                 var script = $(this);
@@ -297,7 +484,7 @@
             element = $(element);
 
             if (typeof data == 'string') {
-                data = eval('(' + data + ')');
+                data = $.evalJSON(data);
             }
 
             var existingData = element.data('debug');
@@ -308,7 +495,7 @@
             }
 
             element.attr('data-debug',script.attr('data-id'));
-            element.data('debug', existingData);
+            element.attr('data-debug', $.toJSON(existingData));
         },
         activateInspector: function() {
             $(window).bind('click', this.showInspector);
@@ -361,12 +548,16 @@
         },
         position: function(element, e){
             element.css("position","absolute");
-            /*element.css("top", Math.max(0, (($(window).height() - $(element).outerHeight()) / 2) +
-                                                            $(window).scrollTop()) + "px");
-            element.css("left", Math.max(0, (($(window).width() - $(element).outerWidth()) / 2) +
-                                                            $(window).scrollLeft()) + "px");*/
 
-            var top = (e.pageY - $(element).outerHeight() / 2);
+            var left =  Math.max(0, (($(window).width() - $(element).outerWidth()) / 2) + $(window).scrollLeft());
+            var top =  Math.max(0, (($(window).height() - $(element).outerHeight()) / 2) + $(window).scrollTop());
+
+
+
+            element.css("top", (top / 2) + "px");
+            element.css("left", left + "px");
+
+            /*var top = (e.pageY - $(element).outerHeight() / 2);
             if (top<=0) {
                 top = 20;
             }
@@ -376,7 +567,7 @@
                 left = 20;
             }
             element.css("top", top + "px");
-            element.css("left", left + "px");
+            element.css("left", left + "px");*/
             return element;
         }
 

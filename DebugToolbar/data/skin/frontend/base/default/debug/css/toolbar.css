@@ -1,5 +1,9 @@
 /* Debug Toolbar CSS Reset, adapted from Eric Meyer's CSS Reset */
-#djDebug {color:#000;background:#FFF;}
+#djDebug {
+  color: #000;
+  background: #FFF;
+}
+
 #djDebug, #djDebug div, #djDebug span, #djDebug applet, #djDebug object, #djDebug iframe,
 #djDebug h1, #djDebug h2, #djDebug h3, #djDebug h4, #djDebug h5, #djDebug h6, #djDebug p, #djDebug blockquote, #djDebug pre,
 #djDebug a, #djDebug abbr, #djDebug acronym, #djDebug address, #djDebug big, #djDebug cite, #djDebug code,
@@ -9,253 +13,258 @@
 #djDebug dl, #djDebug dt, #djDebug dd, #djDebug ol, #djDebug ul, #djDebug li,
 #djDebug fieldset, #djDebug form, #djDebug label, #djDebug legend,
 #djDebug table, #djDebug caption, #djDebug tbody, #djDebug tfoot, #djDebug thead, #djDebug tr, #djDebug th, #djDebug td {
-    letter-spacing: normal;
-    margin:0;
-    padding:0;
-    border:0;
-    outline:0;
-    font-size:12px;
-    line-height:1.5em;
-    color:#000;
-    vertical-align:baseline;
-    background:transparent;
-    font-family:sans-serif;
-    text-align:left;
+  letter-spacing: normal;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 12px;
+  line-height: 1.5em;
+  color: #000;
+  vertical-align: baseline;
+  background: transparent;
+  font-family: sans-serif;
+  text-align: left;
 }
 
 #djDebug #djDebugToolbar {
-    background:#111;
-    width:200px;
-    z-index:100000000;
-    position:fixed;
-    top:0;
-    bottom:0;
-    right:0;
-    opacity:0.9;
+  background: #111;
+  width: 200px;
+  z-index: 100000000;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0.9;
 }
 
 #djDebug #djDebugToolbar small {
-    color:#999;
+  color: #999;
 }
 
 #djDebug #djDebugToolbar ul {
-    margin:0;
-    padding:0;
-    list-style:none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 #djDebug #djDebugToolbar li {
-    border-bottom:1px solid #222;
-    color:#fff;
-    display:block;
-    font-weight:bold;
-    float:none;
-    margin:0;
-    padding:0;
-    position:relative;
-    width:auto;
+  border-bottom: 1px solid #222;
+  color: #fff;
+  display: block;
+  font-weight: bold;
+  float: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  width: auto;
 }
 
-#djDebug #djDebugToolbar li>a,
-#djDebug #djDebugToolbar li>div.contentless  {
-    font-weight:normal;
-    font-style:normal;
-    text-decoration:none;
-    display:block;
-    font-size:16px;
-    padding:10px 10px 5px 25px;
-    color:#fff;
+#djDebug #djDebugToolbar li > a,
+#djDebug #djDebugToolbar li > div.contentless {
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  display: block;
+  font-size: 16px;
+  padding: 10px 10px 5px 25px;
+  color: #fff;
 }
 
 #djDebug #djDebugToolbar li a:hover {
-    color:#111;
-    background-color:#ffc;
+  color: #111;
+  background-color: #ffc;
 }
 
 #djDebug #djDebugToolbar li.active {
-    background-image:url(../img/indicator.png);
-    background-repeat:no-repeat;
-    background-position:left center;
-    background-color:#333;
-    padding-left:10px;
+  background-image: url(../img/indicator.png);
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-color: #333;
+  padding-left: 10px;
 }
 
 #djDebug #djDebugToolbar li.active a:hover {
-    color:#b36a60;
-    background-color:transparent;
+  color: #b36a60;
+  background-color: transparent;
 }
 
 #djDebug #djDebugToolbar li small {
-    font-size:12px;
-    color:#999;
-    font-style:normal;
-    text-decoration:none;
-    font-variant:small-caps;
+  font-size: 12px;
+  color: #999;
+  font-style: normal;
+  text-decoration: none;
+  font-variant: small-caps;
 }
 
 #djDebug #djDebugToolbarHandle {
-    position:fixed;
-    background:#fff;
-    border:1px solid #111;
-    top:30px;
-    right:0;
-    z-index:100000000;
-    opacity:0.75;
+  position: fixed;
+  background: #fff;
+  border: 1px solid #111;
+  top: 30px;
+  right: 0;
+  z-index: 100000000;
+  opacity: 0.75;
 }
 
 #djDebug a#djShowToolBarButton {
-    display:block;
-    height:75px;
-    width:30px;
-    border-right:none;
-    border-bottom:4px solid #fff;
-    border-top:4px solid #fff;
-    border-left:4px solid #fff;
-    color:#fff;
-    font-size:10px;
-    font-weight:bold;
-    text-decoration:none;
-    text-align:center;
-    text-indent:-999999px;
-    background:#000 url(../img/djdt_vertical.png) no-repeat left center;
-    opacity:0.5;
+  display: block;
+  height: 75px;
+  width: 30px;
+  border-right: none;
+  border-bottom: 4px solid #fff;
+  border-top: 4px solid #fff;
+  border-left: 4px solid #fff;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  text-indent: -999999px;
+  background: #000 url(../img/djdt_vertical.png) no-repeat left center;
+  opacity: 0.5;
 }
 
 #djDebug a#djShowToolBarButton:hover {
-    background-color:#111;
-    padding-right:6px;
-    border-top-color:#FFE761;
-    border-left-color:#FFE761;
-    border-bottom-color:#FFE761;
-    opacity:1.0;
+  background-color: #111;
+  padding-right: 6px;
+  border-top-color: #FFE761;
+  border-left-color: #FFE761;
+  border-bottom-color: #FFE761;
+  opacity: 1.0;
 }
 
-#djDebug a#djDebugInspectButton{
-    background:#9D9D9D url(../img/inspect.png) no-repeat 0 0;
-    border: 1px solid #000000;
-    display: block;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 10px;
-    text-indent: -9999999px;
-    outline: 0;
-    width:24px; height:24px;
-    margin: 0 0 4px 4px;
+#djDebug a#djDebugInspectButton {
+  background: #9D9D9D url(../img/inspect.png) no-repeat 0 0;
+  border: 1px solid #000000;
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 10px;
+  text-indent: -9999999px;
+  outline: 0;
+  width: 24px;
+  height: 24px;
+  margin: 0 0 4px 4px;
 }
 
-#djDebug a#djDebugInspectButton:hover{
-    background-color: #FF9F33;
+#djDebug a#djDebugInspectButton:hover {
+  background-color: #FF9F33;
 }
-#djDebug a#djDebugInspectButton.active{
-    background-color: #F13047;
+
+#djDebug a#djDebugInspectButton.active {
+  background-color: #F13047;
 }
 
 #djDebug code {
-    display:block;
-    font-family:Consolas, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
-    white-space:pre;
-    overflow:auto;
+  display: block;
+  font-family: Consolas, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  white-space: pre;
+  overflow: auto;
 }
 
 #djDebug code span {
-    font-family:Consolas, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
+  font-family: Consolas, Monaco, "Bitstream Vera Sans Mono", "Lucida Console", monospace;
 }
 
 #djDebug tr.djDebugOdd {
-    background-color:#f5f5f5;
+  background-color: #f5f5f5;
 }
 
 #djDebug .panelContent {
-    display:none;
-    position:fixed;
-    margin:0;
-    top:0;
-    right:200px;
-    bottom:0;
-    left:0px;
-    background-color:#eee;
-    color:#666;
-    z-index:100000000;
+  display: none;
+  position: fixed;
+  margin: 0;
+  top: 0;
+  right: 200px;
+  bottom: 0;
+  left: 0px;
+  background-color: #eee;
+  color: #666;
+  z-index: 100000000;
 }
 
 #djDebug .panelContent > div {
-    border-bottom:1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 #djDebug .djDebugPanelTitle {
-    position:absolute;
-    background-color:#ffc;
-    color:#666;
-    padding-left:20px;
-    top:0;
-    right:0;
-    left:0;
-    height:50px;
+  position: absolute;
+  background-color: #ffc;
+  color: #666;
+  padding-left: 20px;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 50px;
 }
 
 #djDebug .djDebugPanelTitle code {
-    display:inline;
-    font-size:inherit;
+  display: inline;
+  font-size: inherit;
 }
 
 #djDebug .djDebugPanelContent {
-    position:absolute;
-    top:50px;
-    right:0;
-    bottom:0;
-    left:0;
-    height:auto;
-    padding:0 0 0 20px;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: auto;
+  padding: 0 0 0 20px;
 }
 
 #djDebug .djDebugPanelContent .scroll {
-    height:100%;
-    overflow:auto;
-    display:block;
-    padding:0 10px 0 0;
+  height: 100%;
+  overflow: auto;
+  display: block;
+  padding: 0 10px 0 0;
 }
 
 #djDebug h3 {
-    font-size:12px;
-    font-weight:normal;
-    line-height:25px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 25px;
 }
 
 #djDebug h4 {
-    font-size:20px;
-    font-weight:bold;
-    margin-top:0.8em;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 0.8em;
 }
 
 #djDebug .panelContent table {
-    border:1px solid #ccc;
-    border-collapse:collapse;
-    width:100%;
-    background-color:#fff;
-    display:block;
-    margin-top:0.8em;
-    overflow: auto;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #fff;
+  display: block;
+  margin-top: 0.8em;
+  overflow: auto;
 }
+
 #djDebug .panelContent tbody td,
 #djDebug .panelContent tbody th {
-    vertical-align:top;
-    padding:2px 3px;
+  vertical-align: top;
+  padding: 2px 3px;
 }
+
 #djDebug .panelContent thead th {
-    padding:1px 6px 1px 3px;
-    text-align:left;
-    font-weight:bold;
-    font-size:14px;
+  padding: 1px 6px 1px 3px;
+  text-align: left;
+  font-weight: bold;
+  font-size: 14px;
 }
+
 #djDebug .panelContent tbody th {
-    width:12em;
-    text-align:right;
-    color:#666;
-    padding-right:.5em;
+  width: 12em;
+  text-align: right;
+  color: #666;
+  padding-right: .5em;
 }
 
 #djDebug .djTemplateHideContextDiv {
-    background-color:#fff;
+  background-color: #fff;
 }
 
 /*
@@ -311,225 +320,328 @@
 */
 
 #djDebug .panelContent .djDebugClose {
-    text-indent:-9999999px;
-    display:block;
-    position:absolute;
-    top:4px;
-    right:15px;
-    height:40px;
-    width:40px;
-    background:url(../img/close.png) no-repeat center center;
+  text-indent: -9999999px;
+  display: block;
+  position: absolute;
+  top: 4px;
+  right: 15px;
+  height: 40px;
+  width: 40px;
+  background: url(../img/close.png) no-repeat center center;
 }
 
 #djDebug .panelContent .djDebugClose:hover {
-    background-image:url(../img/close_hover.png);
+  background-image: url(../img/close_hover.png);
 }
 
 #djDebug .panelContent .djDebugClose.djDebugBack {
-    background-image:url(../img/back.png);
+  background-image: url(../img/back.png);
 }
 
-#djDebug .panelContent .djDebugClose.djDebugBack:hover  {
-    background-image:url(../img/back_hover.png);
+#djDebug .panelContent .djDebugClose.djDebugBack:hover {
+  background-image: url(../img/back_hover.png);
 }
 
 #djDebug .panelContent dt, #djDebug .panelContent dd {
-    display:block;
+  display: block;
 }
 
 #djDebug .panelContent dt {
-    margin-top:0.75em;
+  margin-top: 0.75em;
 }
 
 #djDebug .panelContent dd {
-    margin-left:10px;
+  margin-left: 10px;
 }
 
 #djDebug a.toggleTemplate {
-    padding:4px;
-    background-color:#bbb;
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
+  padding: 4px;
+  background-color: #bbb;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 
 #djDebug a.toggleTemplate:hover {
-    padding:4px;
-    background-color:#444;
-    color:#ffe761;
-    -moz-border-radius:3px;
-    -webkit-border-radius:3px;
+  padding: 4px;
+  background-color: #444;
+  color: #ffe761;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
-
 
 #djDebug a.djTemplateShowContext, #djDebug a.djTemplateShowContext span.toggleArrow {
-    color:#999;
+  color: #999;
 }
 
-#djDebug a.djTemplateShowContext:hover,  #djDebug a.djTemplateShowContext:hover span.toggleArrow {
-    color:#000;
-    cursor:pointer;
+#djDebug a.djTemplateShowContext:hover, #djDebug a.djTemplateShowContext:hover span.toggleArrow {
+  color: #000;
+  cursor: pointer;
 }
 
 #djDebug .djDebugSqlWrap {
-    position:relative;
+  position: relative;
 }
 
 #djDebug .djDebugSql {
-    z-index:100000002;
+  z-index: 100000002;
 }
 
 #djDebug .djSQLHideStacktraceDiv tbody th {
-    text-align: left;
+  text-align: left;
 }
 
 #djDebug .djSqlExplain td {
-    white-space: pre;
+  white-space: pre;
 }
 
 #djDebug span.djDebugLineChart {
-    background-color:#777;
-    height:3px;
-    position:absolute;
-    bottom:0;
-    top:0;
-    left:0;
-    display:block;
-    z-index:1000000001;
+  background-color: #777;
+  height: 3px;
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  display: block;
+  z-index: 1000000001;
 }
+
 #djDebug span.djDebugLineChartWarning {
-    background-color:#900;
+  background-color: #900;
 }
 
-#djDebug .highlight  { color:#000; }
-#djDebug .highlight .err { color:#000; } /* Error */
-#djDebug .highlight .g { color:#000; } /* Generic */
-#djDebug .highlight .k { color:#000; font-weight:bold } /* Keyword */
-#djDebug .highlight .o { color:#000; } /* Operator */
-#djDebug .highlight .n { color:#000; } /* Name */
-#djDebug .highlight .mi { color:#000; font-weight:bold } /* Literal.Number.Integer */
-#djDebug .highlight .l { color:#000; } /* Literal */
-#djDebug .highlight .x { color:#000; } /* Other */
-#djDebug .highlight .p { color:#000; } /* Punctuation */
-#djDebug .highlight .m { color:#000; font-weight:bold } /* Literal.Number */
-#djDebug .highlight .s { color:#333 } /* Literal.String */
-#djDebug .highlight .w { color:#888888 } /* Text.Whitespace */
-#djDebug .highlight .il { color:#000; font-weight:bold } /* Literal.Number.Integer.Long */
-#djDebug .highlight .na { color:#333 } /* Name.Attribute */
-#djDebug .highlight .nt { color:#000; font-weight:bold } /* Name.Tag */
-#djDebug .highlight .nv { color:#333 } /* Name.Variable */
-#djDebug .highlight .s2 { color:#333 } /* Literal.String.Double */
-#djDebug .highlight .cp { color:#333 } /* Comment.Preproc */
-
-#djDebug div.loader { background: url(../img/loader.gif); margin: 100px auto; width: 64px; height: 64px; border: none; }
-
-#djDebug .debug_profile_log
-{
-    margin:10px 0 0 0;
-    width:100%;
+#djDebug .highlight {
+  color: #000;
 }
-#djDebug .debug_profile_log caption{
-    background:#4EA74E;
-    color:#FFFFFF;
-    padding:2px;
-    font-weight:bold;
-    border-top:2px solid #265226;
-    border-bottom:1px solid #265226;
+
+#djDebug .highlight .err {
+  color: #000;
 }
+
+/* Error */
+#djDebug .highlight .g {
+  color: #000;
+}
+
+/* Generic */
+#djDebug .highlight .k {
+  color: #000;
+  font-weight: bold
+}
+
+/* Keyword */
+#djDebug .highlight .o {
+  color: #000;
+}
+
+/* Operator */
+#djDebug .highlight .n {
+  color: #000;
+}
+
+/* Name */
+#djDebug .highlight .mi {
+  color: #000;
+  font-weight: bold
+}
+
+/* Literal.Number.Integer */
+#djDebug .highlight .l {
+  color: #000;
+}
+
+/* Literal */
+#djDebug .highlight .x {
+  color: #000;
+}
+
+/* Other */
+#djDebug .highlight .p {
+  color: #000;
+}
+
+/* Punctuation */
+#djDebug .highlight .m {
+  color: #000;
+  font-weight: bold
+}
+
+/* Literal.Number */
+#djDebug .highlight .s {
+  color: #333
+}
+
+/* Literal.String */
+#djDebug .highlight .w {
+  color: #888888
+}
+
+/* Text.Whitespace */
+#djDebug .highlight .il {
+  color: #000;
+  font-weight: bold
+}
+
+/* Literal.Number.Integer.Long */
+#djDebug .highlight .na {
+  color: #333
+}
+
+/* Name.Attribute */
+#djDebug .highlight .nt {
+  color: #000;
+  font-weight: bold
+}
+
+/* Name.Tag */
+#djDebug .highlight .nv {
+  color: #333
+}
+
+/* Name.Variable */
+#djDebug .highlight .s2 {
+  color: #333
+}
+
+/* Literal.String.Double */
+#djDebug .highlight .cp {
+  color: #333
+}
+
+/* Comment.Preproc */
+
+#djDebug div.loader {
+  background: url(../img/loader.gif);
+  margin: 100px auto;
+  width: 64px;
+  height: 64px;
+  border: none;
+}
+
+#djDebug .debug_profile_log {
+  margin: 10px 0 0 0;
+  width: 100%;
+}
+
+#djDebug .debug_profile_log caption {
+  background: #4EA74E;
+  color: #FFFFFF;
+  padding: 2px;
+  font-weight: bold;
+  border-top: 2px solid #265226;
+  border-bottom: 1px solid #265226;
+}
+
 #djDebug .debug_profile_log th,
-#djDebug .debug_profile_log td{
-    padding:2px;
+#djDebug .debug_profile_log td {
+  padding: 2px;
 }
-#djDebug .debug_profile_log th{
-    background:#6DA8BB;
-    color:#FFFFFF;
-    text-align:left;
-    font-weight:bold;
-    border-bottom:1px solid #B3D1DB;
-    border-right:1px solid #B3D1DB;
+
+#djDebug .debug_profile_log th {
+  background: #6DA8BB;
+  color: #FFFFFF;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 1px solid #B3D1DB;
+  border-right: 1px solid #B3D1DB;
 }
-#djDebug .debug_profile_log td{
-    background:#F6EDE7;
-    color:#000000;
-    text-align:left;
-    border-bottom:1px solid #B3D1DB;
-    border-right:1px solid #B3D1DB;
+
+#djDebug .debug_profile_log td {
+  background: #F6EDE7;
+  color: #000000;
+  text-align: left;
+  border-bottom: 1px solid #B3D1DB;
+  border-right: 1px solid #B3D1DB;
 }
+
 #djDebug .debug_profile_log th:last-child,
-#djDebug .debug_profile_log td:last-child{
-    border-right:none;
+#djDebug .debug_profile_log td:last-child {
+  border-right: none;
 }
+
 #djDebug h5 {
-   font-family:Arial, Helvetica, sans-serif;
-   letter-spacing:normal;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: normal;
 }
 
 .djDebugToolbarPopup {
-    position:absolute;
-    display:none;
-    background: #fff5cc;
-    border:1px solid #B08E00;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    z-index:999999;
-    padding:11px;
+  position: absolute;
+  display: none;
+  background: #fff5cc;
+  border: 1px solid #B08E00;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  z-index: 999999;
+  padding: 11px;
+  color: #000000;
 
-    -webkit-box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.75);
-    -moz-box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.75);
-    box-shadow: 0px 0px 5px 3px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.75);
+}
+
+.djDebugToolbarPopup *::selection {
+  background: #C68C10;
+}
+
+.djDebugToolbarPopup *::-moz-selection {
+  background: #C68C10; /* Firefox */
 }
 
 .djDebugToolbarPopup.invisible {
-   opacity:0.3;
+  opacity: 0.3;
 }
 
-.djDebugToolbarPopup table td, .djDebugToolbarPopup table th{
-    padding:2px;
+.djDebugToolbarPopup table td, .djDebugToolbarPopup table th {
+  padding: 2px;
 }
 
-.djDebugToolbarPopup .btn-close{
-    outline: 0;
-    text-indent: -99999999px;
-    position: absolute;
-    display: block;
-    border: 1px solid #B08E00;
-    color:#FFFFFF;
-    background: #B08E00 url(../img/btn_popup_close.png) no-repeat 0 0;
-    -webkit-border-radius: 15px;
-    -moz-border-radius: 15px;
-    border-radius: 15px;
-    right: -11px;
-    top: -11px;
-    font-size: 32px;
-    line-height: 1;
-    text-decoration: none;
-    padding: 0;
-    width: 25px;
-    height: 25px;
+.djDebugToolbarPopup .btn-close {
+  outline: 0;
+  text-indent: -99999999px;
+  position: absolute;
+  display: block;
+  border: 1px solid #B08E00;
+  color: #FFFFFF;
+  background: #B08E00 url(../img/btn_popup_close.png) no-repeat 0 0;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  right: -11px;
+  top: -11px;
+  font-size: 32px;
+  line-height: 1;
+  text-decoration: none;
+  padding: 0;
+  width: 25px;
+  height: 25px;
 }
 
-
-.djDebugToolbarPopup .btn-close:hover{
+.djDebugToolbarPopup .btn-close:hover {
 
 }
-
 
 .djDebugToolbarPopup table td {
-    padding: 3px;
+  padding: 3px;
 
 }
-.djDebugHover{
-  border:1px solid #FF9F33;
+
+.djDebugHover {
+  border: 1px solid #FF9F33;
 }
-.djDebugHover-selected{
+
+.djDebugHover-selected {
 }
+
 .djDebugToolbarPopup .highlightBtn {
   padding: 3px;
-  font-weight:bold;
+  font-weight: bold;
   text-decoration: underline;
-  border:1px solid #FF9F33;
+  border: 1px solid #FF9F33;
 }
+
 .djDebugToolbarPopup .highlightBtn:hover {
-  background:#FF9F33;
+  background: #FF9F33;
 
 }
+
