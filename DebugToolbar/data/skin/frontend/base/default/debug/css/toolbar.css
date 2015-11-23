@@ -141,7 +141,7 @@
   font-size: 20px;
   font-weight: bold;
   line-height: 10px;
-  text-indent: -9999999px;
+  text-indent: -999999px;
   outline: 0;
   width: 24px;
   height: 24px;
@@ -320,7 +320,7 @@
 */
 
 #djDebug .panelContent .djDebugClose {
-  text-indent: -9999999px;
+  text-indent: -999999px;
   display: block;
   position: absolute;
   top: 4px;
@@ -598,7 +598,7 @@
 
 .djDebugToolbarPopup .btn-close {
   outline: 0;
-  text-indent: -99999999px;
+  text-indent: -999999px;
   position: absolute;
   display: block;
   border: 1px solid #B08E00;
