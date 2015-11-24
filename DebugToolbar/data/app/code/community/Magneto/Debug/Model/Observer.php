@@ -214,6 +214,8 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
+        return;
+
         /** @var Varien_Event */
         $event = $observer->getEvent();
         $block = $event->getBlock();
@@ -259,6 +261,8 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
+        return;
+
         $action = $event->getControllerAction();
         $response = $event->getResponse();
 
@@ -283,6 +287,8 @@ class Magneto_Debug_Model_Observer
         if (!$this->isModuleActive) {
             return;
         }
+
+        return;
 
         /** @var Mage_Core_Model_Mysql4_Store_Collection */
         $collection = $event->getCollection();
@@ -315,6 +321,10 @@ class Magneto_Debug_Model_Observer
 
         $transport = $event->getTransport();
         $html = $transport->getHtml();
+        if (trim($html) == '') {
+            return;
+        }
+
         $block = $event->getBlock();
 
         if ($block instanceof Magneto_Debug_Block_Abstract) {
@@ -399,6 +409,8 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
+        return;
+
         $collection = $event->getCollection();
         $sqlStruct = array();
         $sqlStruct['sql'] = $collection->getSelectSql(true);
@@ -429,6 +441,8 @@ class Magneto_Debug_Model_Observer
         if (!$this->isModuleActive) {
             return;
         }
+
+        return;
 
         $event = $observer->getEvent();
         $object = $event->getObject();
