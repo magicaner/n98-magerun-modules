@@ -598,7 +598,7 @@
 
 .djDebugToolbarPopup .btn-close {
   outline: 0;
-  text-indent: -999999px;
+  text-indent: -9999px;
   position: absolute;
   display: block;
   border: 1px solid #B08E00;
