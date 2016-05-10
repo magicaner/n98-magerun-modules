@@ -37,9 +37,6 @@ class ModelCommand extends AbstractMagentoCommand
     {
         $this
             ->setName('magic:model')
-            ->setAliases([
-                'crud'
-            ])
             ->addArgument('module', InputArgument::REQUIRED, 'Module name')
             ->addArgument('table', InputArgument::REQUIRED, 'Table name')
             ->addArgument('model', InputArgument::REQUIRED, 'Model name')
@@ -127,7 +124,7 @@ class ModelCommand extends AbstractMagentoCommand
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
-                [$this->uc_words($this->_vars['model']), $this->uc_words($this->_vars['model']).'Controller'],
+                [$this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
                 $path
             );
         }

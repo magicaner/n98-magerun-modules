@@ -214,8 +214,6 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
-        return;
-
         /** @var Varien_Event */
         $event = $observer->getEvent();
         $block = $event->getBlock();
@@ -246,7 +244,40 @@ class Magneto_Debug_Model_Observer
 
         $this->blocks[] = $blockStruct;
 
+        $this->_saveBlockDebugInfo($block);
+
         return $this;
+    }
+
+    /**
+     * store block debug info
+     *
+     * @param Mage_Core_Block_Template $block
+     * @return void
+     */
+    protected function _saveBlockDebugInfo($block)
+    {
+        // store block debug info
+        $absoluteFilePath = Mage::getBaseDir('design') . DIRECTORY_SEPARATOR .  $block->getTemplateFile();
+
+        if (!file_exists($absoluteFilePath) || !$block->getTemplateFile()) {
+            return;
+        }
+
+        $absoluteFilePath = str_replace(Mage::getBaseDir(), '', $absoluteFilePath);
+        $absoluteFilePath = Mage::helper('debug')->fixAbsolutePath($absoluteFilePath);
+
+        $data = [
+            'class' => get_class($block),
+            'alias' => $block->getAlias(),
+            'name' => $block->getNameInLayout(),
+            'template' => $absoluteFilePath,
+            //'layout' => $block->get
+            //'data' => $block->getData()
+        ];
+
+        $block->setMagnetoDebugInfo($data);
+        return;
     }
 
     /**
@@ -300,6 +331,16 @@ class Magneto_Debug_Model_Observer
         $this->collections[] = $collectionStruct;
     }
 
+    public function isJsonHeader()
+    {
+        $headers = Mage::app()->getResponse()->getHeaders();
+        foreach ($headers as $header) {
+            if (strcmp($header['name'], 'Content-type') == 0) {
+                return $header['value'];
+            }
+        }
+    }
+
     /**
      * add js onhover for each html template block
      *
@@ -311,21 +352,28 @@ class Magneto_Debug_Model_Observer
         if (Mage::app()->getStore()->isAdmin()) {
             return;
         }
-        if (Mage::app()->getRequest()->isAjax()) {
+
+        if ($this->isJsonHeader()) {
             return;
         }
+
+        /*if (Mage::app()->getRequest()->isAjax()) {
+            return;
+        }*/
 
         /* @var $block Mage_Core_Block_Template */
 
         $blockTags = ['html'];
 
+        $block = $event->getBlock();
         $transport = $event->getTransport();
         $html = $transport->getHtml();
+
         if (trim($html) == '') {
             return;
         }
 
-        $block = $event->getBlock();
+
 
         if ($block instanceof Magneto_Debug_Block_Abstract) {
             return;
@@ -339,23 +387,9 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
-        $absoluteFilepath = Mage::getBaseDir('design') . DIRECTORY_SEPARATOR .  $block->getTemplateFile();
-
-        if (!file_exists($absoluteFilepath) || !$block->getTemplateFile()) {
+        if (!($data = $block->getMagnetoDebugInfo())) {
             return;
         }
-
-        $absoluteFilepath = str_replace(Mage::getBaseDir(), '', $absoluteFilepath);
-        $absoluteFilepath = Mage::helper('debug')->fixAbsolutePath($absoluteFilepath);
-
-        $data = [
-            'class' => get_class($block),
-            'alias' => $block->getAlias(),
-            'name' => $block->getNameInLayout(),
-            'template' => $absoluteFilepath,
-            //'layout' => $block->get
-            //'data' => $block->getData()
-        ];
 
         $blockJson = Zend_Json::encode($data);
 

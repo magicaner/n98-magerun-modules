@@ -129,7 +129,7 @@ class CrudCommand extends AbstractMagentoCommand
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
-                [$this->uc_words($this->_vars['model']), $this->uc_words($this->_vars['model']).'Controller'],
+                [$this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
                 $path
             );
         }
