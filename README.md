@@ -2,7 +2,7 @@
 # Magic n98-magerun modules
 
 
-### Debug panel, allows to isnpect blocks other mangeto debug information in separate floating panel
+### Debug panel, allows to inspect blocks and other mangeto debug information in separate floating panel
 
 ```
 n98-magerun dev:debug:toolbar:enable  will intall debug panel and refresh the cache
