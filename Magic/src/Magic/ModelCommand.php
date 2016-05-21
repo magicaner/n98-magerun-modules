@@ -21,16 +21,39 @@ class ModelCommand extends AbstractMagentoCommand
     private $_vars = null;
     private $_applicationPaths = null;
     private $_templatePaths = null;
+    protected $_templateVersion = 'basic';
 
     /**
      * @var InputInterface
      */
     protected $_input = null;
 
-    public $templates = [
-            'model' => 'Model/{{model}}',
-            'model_resource' => 'Model/Resource/{{model}}',
-            'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
+    public $templates =
+        [
+            'basic' => [
+                'helper_data' => 'Helper/Data',
+                'model' => 'Model/{{model}}',
+                'model_resource' => 'Model/Resource/{{model}}',
+                'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
+                'admin_controller' => 'controllers/Adminhtml/{{controller}}',
+                'block_admin_model' => 'Block/Adminhtml/{{model}}',
+                'block_admin_model_grid' => 'Block/Adminhtml/{{model}}/Grid',
+                'block_admin_model_edit' => 'Block/Adminhtml/{{model}}/Edit',
+                'block_admin_model_edit_form' => 'Block/Adminhtml/{{model}}/Edit/Form'
+            ],
+            'advanced' => [
+                'helper_data' => 'Helper/Data',
+                'model' => 'Model/{{model}}',
+                'model_resource' => 'Model/Resource/{{model}}',
+                'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
+                'admin_controller' => 'controllers/Adminhtml/{{controller}}',
+                'block_admin_model' => 'Block/Adminhtml/{{model}}',
+                'block_admin_model_grid' => 'Block/Adminhtml/{{model}}/Grid',
+                'block_admin_model_edit' => 'Block/Adminhtml/{{model}}/Edit',
+                'block_admin_model_edit_form' => 'Block/Adminhtml/{{model}}/Edit/Form',
+                'block_admin_model_edit_form_tabs' => 'Block/Adminhtml/{{model}}/Edit/Form/Tabs',
+                'block_admin_model_edit_form_tabs_general' => 'Block/Adminhtml/{{model}}/Edit/Form/Tabs/General'
+            ]
         ];
 
     protected function configure()
@@ -42,6 +65,8 @@ class ModelCommand extends AbstractMagentoCommand
             ->addArgument('model', InputArgument::REQUIRED, 'Model name')
 
             ->addOption('force', 'force', InputOption::VALUE_OPTIONAL, 'Rewrite existing files', false)
+            ->addOption('template', 'template', InputOption::VALUE_OPTIONAL,
+                'Template version. \advanced\' or \'basic\'. By default \'basic\' is used', false)
 
         ->setDescription('Create Model, Resource, Collection for given table and model name')
         ;
@@ -68,9 +93,9 @@ class ModelCommand extends AbstractMagentoCommand
         return $absolutePathToModule = __DIR__ . DIRECTORY_SEPARATOR . $this->pathToData;
     }
 
-    protected function getTemplatesPath()
+    protected function getTemplatesPath($version = 'basic')
     {
-        return $this->getDataPath() . '/templates';
+        return $this->getDataPath() . '/templates/' . $this->_templateVersion;
     }
 
     protected function getTemplatePath($name)
@@ -89,7 +114,7 @@ class ModelCommand extends AbstractMagentoCommand
             return $this->_templatePaths;
         }
 
-        $paths = $this->templates;
+        $paths = $this->templates[$this->_templateVersion];
 
         foreach ($paths as &$path) {
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -106,7 +131,7 @@ class ModelCommand extends AbstractMagentoCommand
         if (isset($this->_applicationPaths)) {
             return $this->_applicationPaths;
         }
-        $paths = $this->templates;
+        $paths = $this->templates[$this->_templateVersion];
 
         $moduleName = $this->uc_words($this->_vars['module']);
         $codePool = (string)\Mage::app()->getConfig()->getModuleConfig($moduleName)->codePool;
@@ -139,7 +164,6 @@ class ModelCommand extends AbstractMagentoCommand
         foreach ($templates as $name => $path) {
 
             $content = $this->compileTemplate($path);
-
             $this->saveTemplate($name, $content);
         }
     }
@@ -177,13 +201,16 @@ class ModelCommand extends AbstractMagentoCommand
     protected function initVariables(InputInterface $input)
     {
         $this->_input = $input;
+        if ($this->_input->getOption('template')) {
+            $this->_templateVersion = $this->_input->getOption('template');
+        }
         $module = $this->_input->getArgument('module');
         $model = $this->_input->getArgument('model');
         $table = $this->_input->getArgument('table');
 
         @list($module, $moduleAlias) = @explode(':', $module);
         if (!$moduleAlias) {
-            $moduleAlias = $module;
+            $moduleAlias = strtolower($module);
         }
 
         @list($tableAlias, $table) = @explode(':', $table);
@@ -200,7 +227,7 @@ class ModelCommand extends AbstractMagentoCommand
         $this->_vars = [
             'module' => $module,
             'module_alias' => $moduleAlias,
-            'model' => $model,
+            'model' => strtolower($model),
             'table' => $table,
             'table_alias' => $tableAlias,
             'primarykey' => $this->_getTablePrimaryKey($table),
@@ -231,12 +258,32 @@ class ModelCommand extends AbstractMagentoCommand
         }
 
         foreach ($modificators as $modificator) {
-            if (function_exists($modificator)) {
-                $value = call_user_func($modificator, $value);
-            } elseif (method_exists($this, '_modificator'.$modificator)) {
-                $value = call_user_func([$this, '_modificator'.$modificator], $value);
+
+            list($modificator, $params)  = @explode(':', $modificator);
+            if ($params) {
+                $params = array_merge([$value], explode(';', $params));
+            }
+
+
+            if (method_exists($this, '_modificator' . $modificator)) {
+                if ($params) {
+                    $value = call_user_func_array([$this, '_modificator' . $modificator], explode(';', $params));
+                } else {
+                    $value = call_user_func([$this, '_modificator' . $modificator], $value);
+                }
+
             } elseif (method_exists($this, $modificator)) {
-                $value = call_user_func([$this, $modificator], $value);
+                if ($params) {
+                    $value = call_user_func_array([$this, $modificator], $params);
+                } else {
+                    $value = call_user_func([$this, $modificator], $value);
+                }
+            } elseif (function_exists($modificator)) {
+                if ($params) {
+                    $value = call_user_func_array($modificator, explode(';', $params));
+                } else {
+                    $value = call_user_func($modificator, $value);
+                }
             }
         }
 
@@ -289,7 +336,7 @@ class ModelCommand extends AbstractMagentoCommand
      * @param string $srcSep
      * @return string
      */
-    private function uc_words($str, $destSep='_', $srcSep='_')
+    public function uc_words($str, $destSep='_', $srcSep='_')
     {
         return str_replace(' ', $destSep, ucwords(str_replace($srcSep, ' ', $str)));
     }
@@ -302,5 +349,10 @@ class ModelCommand extends AbstractMagentoCommand
     public function getInput()
     {
         return $this->_input;
+    }
+
+    public function _modificatorUcWords($str, $destSep='_', $srcSep='_')
+    {
+        return $this->uc_words($str, $destSep, $srcSep);
     }
 }
