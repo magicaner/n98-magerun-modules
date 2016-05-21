@@ -1,21 +1,26 @@
-# n98-magerun-modules
 
-h1. Magic n98-magerun modules
+# Magic n98-magerun modules
 
 
-h2. Debug panel, allows to isnpect blocks other mangeto debug information in separate floating panel
+### Debug panel, allows to isnpect blocks other mangeto debug information in separate floating panel
 
-`n98-magerun dev:debug:toolbar:enable` will intall debug panel and refresh the cache
-`n98-magerun dev:debug:toolbar:disable` will disable the debug panel
-`n98-magerun dev:debug:toolbar:remove` will uninstall and remove files
+```
+n98-magerun dev:debug:toolbar:enable  will intall debug panel and refresh the cache
+n98-magerun dev:debug:toolbar:disable will disable the debug panel
+n98-magerun dev:debug:toolbar:remove  will uninstall and remove files
+```
 
-h2. Create crud, model, resource and collection 
+### Create crud, model, resource and collection 
 
-`mage magic:crud Module_Name table_alias modelname --template=basic`    // will create basic adminhtml forms
-`mage magic:crud Module_Name table_alias modelname --template=advanced` // will create tabs based adminhtml forms with stoire switcher
+```
+mage magic:crud Module_Name table_alias modelname --template=basic    // will create basic adminhtml forms
+mage magic:crud Module_Name table_alias modelname --template=advanced // will create tabs based adminhtml forms with stoire switcher
+```
 
-h2. Create model, resource and collection 
+### Create model, resource and collection 
 
-`mage magic:model Module_Name table_alias modelname`
+```
+mage magic:model Module_Name table_alias modelname
+```
 
 
