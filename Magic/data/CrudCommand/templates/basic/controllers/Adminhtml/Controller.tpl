@@ -2,6 +2,16 @@
 class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 {
     /**
+     * is allowed
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('path/to/config');
+    }
+
+    /**
      * init action
      *
      * @return void
