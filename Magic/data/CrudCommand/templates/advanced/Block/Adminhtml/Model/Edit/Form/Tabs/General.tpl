@@ -20,7 +20,9 @@ class {{block_admin_edit_form_class_name}}_Tabs_General
     protected function _getModel()
     {
         if (!$this->hasData('model')) {
-            $model = new Varien_Object();
+            if ((!$model = Mage::registry('{{model}}'))) {
+                $model = new Varien_Object();
+            }
             $this->setData('model', $model);
         }
         return $this->getData('model');
@@ -44,8 +46,6 @@ class {{block_admin_edit_form_class_name}}_Tabs_General
             'label'     => $helper->__('Example Field'),
             'required'  => true,
         ));
-
-
 
         $form->setDataObject($this->_getModel());
         $form->setFieldNameSuffix('{{model}}');

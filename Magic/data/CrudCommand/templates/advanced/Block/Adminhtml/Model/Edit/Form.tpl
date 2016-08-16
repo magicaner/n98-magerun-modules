@@ -15,6 +15,16 @@ class {{block_admin_edit_form_class_name}} extends Mage_Adminhtml_Block_Widget
                 ))
         );
 
+        $this->setChild('delete_button',
+            $this->getLayout()->createBlock('adminhtml/widget_button')
+                ->setData(array(
+                    'label'     => $helper->__('Delete'),
+                    'onclick'   => 'if (confirm(\'' . $helper->__('Are you sure?') . '\')) {setLocation(\'' .
+                        $this->getUrl('*/*/delete', array('id'=>$this->getRequest()->getParam('id', 0))) . '\'); }',
+                    'class' => 'delete'
+                ))
+        );
+
         $this->setChild('reset_button',
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
@@ -27,7 +37,7 @@ class {{block_admin_edit_form_class_name}} extends Mage_Adminhtml_Block_Widget
             $this->getLayout()->createBlock('adminhtml/widget_button')
                 ->setData(array(
                     'label'     => $helper->__('Save'),
-                    'onclick'   => '{{model}}.submit()',
+                    'onclick'   => '$(\'{{model}}_form\').submit()',
                     'class'     => 'save'
                 ))
         );
