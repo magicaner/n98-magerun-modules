@@ -22,7 +22,8 @@ class DisableCommand extends AbstractMagentoCommand
                 'tool:disable','tool:-','tool-'
             ])
             ->addOption('stdout', null, InputOption::VALUE_NONE, 'Disable debug toolbar module')
-            ->setDescription('Disable debug toolbar from project')
+            ->setDescription('Disable debug toolbar from project. Module files will stay at project still. 
+                You can enable them by using \'mage tool:enable\' command');
         ;
     }
 
