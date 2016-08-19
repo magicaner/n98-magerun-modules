@@ -100,7 +100,11 @@ class {{block_admin_edit_form_class_name}} extends Mage_Adminhtml_Block_Widget
      */
     public function getSaveUrl()
     {
-        return $this->getUrl('*/*/save', ['store' => Mage::app()->getRequest()->getParam('store', '0')]);
+        if ($this->getRequest()->getParam('id', false)) {
+            return $this->getUrl('*/*/save', ['id' => $this->getRequest()->getParam('id', false)]);
+        } else {
+            return $this->getUrl('*/*/post');
+        }
     }
 
     /**
