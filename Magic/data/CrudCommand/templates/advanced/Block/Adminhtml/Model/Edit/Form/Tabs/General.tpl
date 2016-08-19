@@ -6,7 +6,7 @@ class {{block_admin_edit_form_class_name}}_Tabs_General
     /**
      * get helper
      *
-     * @return Ecommeleon_Price_Helper_Data
+     * @return {{helper_data_class_name}}
      */
     protected function _getHelper()
     {
