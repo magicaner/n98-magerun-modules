@@ -31,28 +31,14 @@ class ModelCommand extends AbstractMagentoCommand
     public $templates =
         [
             'basic' => [
-                'helper_data' => 'Helper/Data',
                 'model' => 'Model/{{model}}',
                 'model_resource' => 'Model/Resource/{{model}}',
                 'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
-                'admin_controller' => 'controllers/Adminhtml/{{controller}}',
-                'block_admin_model' => 'Block/Adminhtml/{{model}}',
-                'block_admin_model_grid' => 'Block/Adminhtml/{{model}}/Grid',
-                'block_admin_model_edit' => 'Block/Adminhtml/{{model}}/Edit',
-                'block_admin_model_edit_form' => 'Block/Adminhtml/{{model}}/Edit/Form'
             ],
             'advanced' => [
-                'helper_data' => 'Helper/Data',
                 'model' => 'Model/{{model}}',
                 'model_resource' => 'Model/Resource/{{model}}',
                 'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
-                'admin_controller' => 'controllers/Adminhtml/{{controller}}',
-                'block_admin_model' => 'Block/Adminhtml/{{model}}',
-                'block_admin_model_grid' => 'Block/Adminhtml/{{model}}/Grid',
-                'block_admin_model_edit' => 'Block/Adminhtml/{{model}}/Edit',
-                'block_admin_model_edit_form' => 'Block/Adminhtml/{{model}}/Edit/Form',
-                'block_admin_model_edit_form_tabs' => 'Block/Adminhtml/{{model}}/Edit/Form/Tabs',
-                'block_admin_model_edit_form_tabs_general' => 'Block/Adminhtml/{{model}}/Edit/Form/Tabs/General'
             ]
         ];
 
