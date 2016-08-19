@@ -212,4 +212,18 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
         $this->_redirectReferer();
     }
+
+    /**
+     * export csv action
+     *
+     * @return void
+     */
+    public function exportCsvAction()
+    {
+        $fileName = 'gifts.csv';
+        $content = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid}}')
+            ->getCsv();
+
+        $this->_prepareDownloadResponse($fileName, $content);
+    }
 }
