@@ -22,6 +22,7 @@ class CrudCommand extends AbstractMagentoCommand
     private $_applicationPaths = null;
     private $_templatePaths = null;
     protected $_templateVersion = 'basic';
+    protected $_basePath = '';
 
     /**
      * @var InputInterface
@@ -70,6 +71,7 @@ class CrudCommand extends AbstractMagentoCommand
 
             ->addOption('menu', 'menu', InputOption::VALUE_OPTIONAL, 'Selected admin menu')
             ->addOption('force', 'force', InputOption::VALUE_OPTIONAL, 'Rewrite existing files', false)
+            ->addOption('basepath', 'basepath', InputOption::VALUE_OPTIONAL, 'Base path', false)
             ->addOption('template', 'template', InputOption::VALUE_OPTIONAL,
                 'Template version. \advanced\' or \'basic\'. By default \'basic\' is used', false)
 
@@ -149,12 +151,13 @@ class CrudCommand extends AbstractMagentoCommand
                     . DS . $codePool . DS . $this->uc_words($moduleName,'/','_');
 
         foreach ($paths as &$path) {
+
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
             $path = $moduleDir . DS . $path . $this->phpExtension;
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
-                [$this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
+                [($this->_basePath ? $this->_basePath . '/' : '' ) . $this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
                 $path
             );
         }
@@ -209,6 +212,11 @@ class CrudCommand extends AbstractMagentoCommand
         if ($this->_input->getOption('template')) {
             $this->_templateVersion = $this->_input->getOption('template');
         }
+
+        if ($this->_input->getOption('template')) {
+            $this->_basePath = $this->_input->getOption('basepath');
+        }
+
         $module = $this->_input->getArgument('module');
         $model = $this->_input->getArgument('model');
         $table = $this->_input->getArgument('table');

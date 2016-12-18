@@ -87,14 +87,14 @@ class Magneto_Debug_Model_Observer
             // Code copy-pasted from core/helper, isDevAllowed method
             // I cannot use that method because the client ip is not always correct (e.g varnish)
             /* Mage_Core_Model_Config_Element */
-            $allowedIps = (string)Mage::getConfig()->getNode('default/dev/restrict/allow_ips');
+            /*$allowedIps = (string)Mage::getConfig()->getNode('default/dev/restrict/allow_ips');
             if ( $isDebugEnable && !empty($allowedIps) && !empty($clientIp)) {
                 $allowedIps = preg_split('#\s*,\s*#', $allowedIps, null, PREG_SPLIT_NO_EMPTY);
                 if (array_search($clientIp, $allowedIps) === false
                     && array_search(Mage::helper('core/http')->getHttpHost(), $allowedIps) === false) {
                         $allow = false;
                     }
-            }
+            }*/
         }
 
         return $allow;

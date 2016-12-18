@@ -61,9 +61,23 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
         $model->load($entityId);
         Mage::register('{{model}}', $model);
 
-        $this->_addContent($this->getLayout()->createBlock('{{module_alias}}/adminhtml_{{model}}_edit'))
-             ->_addLeft($this->getLayout()->createBlock('adminhtml/store_switcher'))
-             ->_addLeft($this->getLayout()->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form_tabs'));
+        $storeSwitcher = $this->getLayout()
+            ->createBlock('adminhtml/store_switcher');
+        $tabs = $this->getLayout()
+            ->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form_tabs');
+        $tabsGeneral = $this->getLayout()
+            ->createBlock(
+                '{{module_alias}}/adminhtml_{{model}}_edit_form_tabs_general',
+                'tab_{{model}}_general'
+            );
+        $tabs->append($tabsGeneral);
+        $tabs->addTab('general', 'tab_{{model}}_general');
+        $this->getLayout()->getBlock('left')->append($storeSwitcher);
+        $this->getLayout()->getBlock('left')->append($tabs);
+
+        $block = $this->getLayout()
+            ->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form');
+        $this->_addContent($block);
 
 
         $this->renderLayout();
@@ -80,9 +94,22 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
         $this->_title($this->__('Create {{model|uc_words: }}'));
 
-        $this->_addContent($this->getLayout()->createBlock('{{module_alias}}/adminhtml_{{model}}_edit'))
-             ->_addLeft($this->getLayout()->createBlock('adminhtml/store_switcher'))
-             ->_addLeft($this->getLayout()->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form_tabs'));
+        $storeSwitcher = $this->getLayout()
+            ->createBlock('adminhtml/store_switcher');
+        $tabs = $this->getLayout()->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form_tabs');
+        $tabsGeneral = $this->getLayout()
+            ->createBlock(
+                '{{module_alias}}/adminhtml_{{model}}_edit_form_tabs_general',
+                'tab_{{model}}_general'
+            );
+        $tabs->append($tabsGeneral);
+        $tabs->addTab('general', 'tab_{{model}}_general');
+        $this->getLayout()->getBlock('left')->append($storeSwitcher);
+        $this->getLayout()->getBlock('left')->append($tabs);
+
+        $block = $this->getLayout()
+            ->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form');
+        $this->_addContent($block);
 
         $this->renderLayout();
     }

@@ -11,7 +11,7 @@
                 j(script).remove();
             }
         };
-        document.documentElement.childNodes[0].appendChild(script)
+        document.body.appendChild(script)
     }
 })(window, document, "2.1.4", function($, jquery_loaded) {
 
