@@ -68,7 +68,7 @@ class EnableCommand extends AbstractMagentoCommand
 
             if (!$input->getOption('ignore-cache')){
                 $this->cleanCache($output);
-                $output->writeln('<info>alean cache</info>');
+                $output->writeln('<info>clean cache</info>');
             }
             if ($input->getOption('gitignore')) {
                 $this->writeToGitIgnore();

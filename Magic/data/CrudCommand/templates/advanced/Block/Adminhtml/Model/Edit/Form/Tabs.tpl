@@ -12,7 +12,7 @@ class {{block_admin_edit_form_class_name}}_Tabs extends Mage_Adminhtml_Block_Wid
         parent::__construct();
         $this->setId('{{model}}_tabs');
         $this->setDestElementId('edit_form');
-        $this->setTitle(Mage::helper('{{module_alias}}')->__('{{model:ucfirst}}'));
+        $this->setTitle(Mage::helper('{{module_alias}}')->__('{{model|ucfirst}}'));
     }
 
     /**
