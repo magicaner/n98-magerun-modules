@@ -383,6 +383,10 @@ class Magneto_Debug_Model_Observer
             return;
         }
 
+        if ($block instanceof Mage_Widget_Block_Interface) {
+            return;
+        }
+
         if (preg_match('/scripts/', $block->getNameInLayout())) {
             return;
         }
