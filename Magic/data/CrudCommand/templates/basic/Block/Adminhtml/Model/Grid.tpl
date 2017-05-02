@@ -28,6 +28,16 @@ class {{block_admin_grid_class_name}}
     }
 
     /**
+     * Retrieve grid url
+     *
+     * @return string
+     */
+    public function getGridUrl()
+    {
+        return $this->getUrl('*/*/grid', array('_current' => true));
+    }
+
+    /**
      * Retrieve URL for Row click
      *
      * @param Varien_Object $row Row

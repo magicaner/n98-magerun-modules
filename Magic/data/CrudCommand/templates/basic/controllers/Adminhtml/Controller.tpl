@@ -34,14 +34,20 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
         $this->_initAction();
         $this->_title($this->__('Manage {{model|ucWords: }}'));
 
-        if ($this->getRequest()->isAjax()) {
-            $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid}}');
-            $this->getResponse()->setBody($block->toHtml());
-        } else {
-            $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid_container}}');
-            $this->_addContent($block);
-            $this->renderLayout();
-        }
+        $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid_container}}');
+        $this->_addContent($block);
+        $this->renderLayout();
+    }
+
+    /**
+     * grid action
+     *
+     * @return void
+     */
+    public function indexAction()
+    {
+        $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid}}');
+        $this->getResponse()->setBody($block->toHtml());
     }
 
     /**
