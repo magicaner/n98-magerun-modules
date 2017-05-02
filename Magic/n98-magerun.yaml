@@ -10,4 +10,5 @@ commands:
     - Magic\ExecCommand
     - Magic\CrudCommand
     - Magic\ModelCommand
+    - Magic\ResetOrderShipments
 #    - Magic\IncludeVendorCommand

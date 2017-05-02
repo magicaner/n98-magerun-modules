@@ -296,7 +296,7 @@ class CrudCommand extends AbstractMagentoCommand
 
             if (method_exists($this, '_modificator' . $modificator)) {
                 if ($params) {
-                    $value = call_user_func_array([$this, '_modificator' . $modificator], explode(';', $params));
+                    $value = call_user_func_array([$this, '_modificator' . $modificator], $params);
                 } else {
                     $value = call_user_func([$this, '_modificator' . $modificator], $value);
                 }

@@ -32,7 +32,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     public function indexAction()
     {
         $this->_initAction();
-        $this->_title($this->__('Manage {{model|ucfirst}}'));
+        $this->_title($this->__('Manage {{model|ucWords: }}'));
 
         if ($this->getRequest()->isAjax()) {
             $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid}}');
@@ -52,7 +52,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     public function editAction()
     {
         $this->_initAction();
-        $this->_title($this->__('Edit {{model|ucfirst}}'));
+        $this->_title($this->__('Edit {{model|ucWords: }}'));
 
         $this->_addContent($this->getLayout()->createBlock('{{module_alias}}/{{block_admin_edit}}'));
         $this->renderLayout();
@@ -67,7 +67,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     {
         $this->_initAction();
 
-        $this->_title($this->__('Create {{model|ucfirst}}'));
+        $this->_title($this->__('Create {{model|ucWords: }}'));
         $this->_addContent($this->getLayout()->createBlock('{{module_alias}}/{{block_admin_edit}}'));
 
         $this->renderLayout();
@@ -90,7 +90,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
             try {
                 $model->save();
-                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} has been successfully created'));
+                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucWords: }} has been successfully created'));
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
                 return;
             } catch (Exception $e) {
@@ -127,7 +127,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
                 $model->addData($data);
                 $model->save();
-                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucfirst}} has been successfully saved'));
+                Mage::getSingleton('adminhtml/session')->addSuccess($helper->__('{{model|ucWords: }} has been successfully saved'));
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
                 return;
@@ -152,7 +152,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
             $model->delete();
 
             Mage::getSingleton('adminhtml/session')
-                ->addSuccess(Mage::helper('{{module_alias}}/data')->__('{{model|ucfirst}} has been successfully deleted'));
+                ->addSuccess(Mage::helper('{{module_alias}}/data')->__('{{model|ucWords: }} has been successfully deleted'));
             $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
             return;
