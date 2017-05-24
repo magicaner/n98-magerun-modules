@@ -31,6 +31,11 @@ class DevCommand extends AbstractMagentoCommand
             'install-script' => 'Helper/Data',
         ];
 
+    public function isHidden()
+    {
+        return false;
+    }
+
     protected function configure()
     {
         $this

@@ -28,6 +28,11 @@ class ModelCommand extends AbstractMagentoCommand
      */
     protected $_input = null;
 
+    public function isHidden()
+    {
+        return false;
+    }
+
     public $templates =
         [
             'basic' => [
