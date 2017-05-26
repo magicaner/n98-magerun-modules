@@ -48,7 +48,8 @@ class ResetOrder extends AbstractMagentoCommand
             $writeConnection = $resource->getConnection('core_write');
 
             $writeConnection->query("DELETE FROM {$resource->getTableName('sales/shipment')} WHERE `order_id` = ?", [$order]);
-            $writeConnection->query("UPDATE {$resource->getTableName('sales/order_item')} SET `qty_shipped` = 0 WHERE `order_id` = ?", [$order]);
+            $writeConnection->query("DELETE FROM {$resource->getTableName('sales/creditmemo')} WHERE `order_id` = ?", [$order]);
+            $writeConnection->query("UPDATE {$resource->getTableName('sales/order_item')} SET `qty_shipped` = 0, `qty_refunded` = 0 WHERE `order_id` = ?", [$order]);
             $writeConnection->query("UPDATE {$resource->getTableName('sales/order')} SET `state` = 'processing', `status` = 'waiting' WHERE `entity_id` = ?",[$order]);
 
             /*$writeConnection->query("UPDATE {$resource->getTableName('sales/order_item')}
@@ -66,7 +67,7 @@ class ResetOrder extends AbstractMagentoCommand
                     `base_total_invoiced` = '0', `base_total_paid`='0', `total_invoiced` = '0', `total_paid` = '0',
                     `base_total_invoiced_cost` = '0',
                     `base_tax_invoiced` = '0', `tax_invoiced` = '0',
-                    `base_discount_invoiced` = '0', `dicsount_invoiced` = '0',
+                    `base_discount_invoiced` = '0', `discount_invoiced` = '0',
                     `base_shipping_invoiced` = '0', `shipping_invoiced` = '0'
                     `base_subtotal_invoiced` = '0', `subtotal_invoiced` = '0'
                   WHERE `entity_id` = ?",
