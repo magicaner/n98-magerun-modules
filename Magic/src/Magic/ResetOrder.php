@@ -1,4 +1,5 @@
 <?php
+
 namespace Magic;
 
 use N98\Magento\Command\AbstractMagentoCommand;
@@ -16,6 +17,7 @@ class ResetOrder extends AbstractMagentoCommand
     {
         return false;
     }
+
     protected function configure()
     {
         $this
@@ -24,9 +26,7 @@ class ResetOrder extends AbstractMagentoCommand
                 'reset:order'
             ])
             ->addArgument('order', InputArgument::REQUIRED, 'Order id')
-
-        ->setDescription('Remove shipment data from order. reset item\'s qty_shipped to 0 . Remove order invoices. Set order status to \'processing\'' )
-        ;
+            ->setDescription('Remove shipment data from order. reset item\'s qty_shipped to 0 . Remove order invoices. Set order status to \'processing\'');
 
     }
 
@@ -41,16 +41,35 @@ class ResetOrder extends AbstractMagentoCommand
         $this->detectMagento($output);
         if ($this->initMagento()) {
 
-            $order = $input->getArgument('order');
+            $orderId = $input->getArgument('order');
 
-	        $resource = \Mage::getSingleton('core/resource');
-	        /** @var \Magento_Db_Adapter_Pdo_Mysql $writeConnection */
+            $collection = \Mage::getResourceModel('sales/order_collection')
+                ->addFieldToFilter(['entity_id', 'increment_id'], [$orderId, $orderId])
+            ;
+
+            $order = $collection->getFirstItem();
+
+            if (!$order->getId()) {
+                $output->writeln('<error>Order not found</error>');
+                return;
+            }
+
+            $resource = \Mage::getSingleton('core/resource');
+            /** @var \Magento_Db_Adapter_Pdo_Mysql $writeConnection */
             $writeConnection = $resource->getConnection('core_write');
 
-            $writeConnection->query("DELETE FROM {$resource->getTableName('sales/shipment')} WHERE `order_id` = ?", [$order]);
-            $writeConnection->query("DELETE FROM {$resource->getTableName('sales/creditmemo')} WHERE `order_id` = ?", [$order]);
-            $writeConnection->query("UPDATE {$resource->getTableName('sales/order_item')} SET `qty_shipped` = 0, `qty_refunded` = 0 WHERE `order_id` = ?", [$order]);
-            $writeConnection->query("UPDATE {$resource->getTableName('sales/order')} SET `state` = 'processing', `status` = 'waiting' WHERE `entity_id` = ?",[$order]);
+            $writeConnection->query("UPDATE {$resource->getTableName('sales/order')} SET `state` = 'processing', `status` = 'waiting' WHERE `entity_id` = ?", [$order->getId()]);
+            $writeConnection->query("UPDATE {$resource->getTableName('sales/order_grid')} SET `status` = 'waiting' WHERE `entity_id` = ?", [$order]);
+            $output->writeln('<info>Remove orders status - OK</info>');
+
+            $writeConnection->query("UPDATE {$resource->getTableName('sales/order_item')} SET `qty_shipped` = 0, `qty_refunded` = 0 WHERE `order_id` = ?", [$order->getId()]);
+            $output->writeln('<info>Reset order items - OK</info>');
+
+            $writeConnection->query("DELETE FROM {$resource->getTableName('sales/shipment')} WHERE `order_id` = ?", [$order->getId()]);
+            $output->writeln('<info>Remove shipments - OK</info>');
+
+            $writeConnection->query("DELETE FROM {$resource->getTableName('sales/creditmemo')} WHERE `order_id` = ?", [$order->getId()]);
+            $output->writeln('<info>Remove credit memos - OK</info>');
 
             /*$writeConnection->query("UPDATE {$resource->getTableName('sales/order_item')}
                   SET
@@ -73,7 +92,7 @@ class ResetOrder extends AbstractMagentoCommand
                   WHERE `entity_id` = ?",
                 [$order]
             );*/
-            $writeConnection->query("UPDATE {$resource->getTableName('sales/order_grid')} SET `status` = 'waiting' WHERE `entity_id` = ?", [$order]);
+
             //$writeConnection->query("DELETE FROM {$resource->getTableName('sales/invoice')} WHERE `order_id` = ?", [$order]);
 
 

@@ -17,7 +17,7 @@ class DisableCommand extends AbstractMagentoCommand
     protected function configure()
     {
         $this
-            ->setName('dev:debug:umc:disable')
+            ->setName('dev:umc:disable')
             ->setAliases([
                 'umc:disable','umc:-','umc-'
             ])

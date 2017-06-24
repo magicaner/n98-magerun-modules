@@ -28,7 +28,7 @@ class EnableCommand extends AbstractMagentoCommand
     protected function configure()
     {
         $this
-            ->setName('dev:debug:toolbar:enable')
+            ->setName('dev:umc:enable')
             ->setAliases([
 	           'umc:enable','umc:+','umc+'
             ])
