@@ -477,6 +477,8 @@
                 self.addHover(element, script);
             });
 
+            $(startSelector).remove();
+            $(endSelector).remove();
 
         },
         addHover: function(element, script) {

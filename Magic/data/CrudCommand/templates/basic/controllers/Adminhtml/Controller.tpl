@@ -44,7 +44,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
      *
      * @return void
      */
-    public function indexAction()
+    public function gridAction()
     {
         $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid}}');
         $this->getResponse()->setBody($block->toHtml());
