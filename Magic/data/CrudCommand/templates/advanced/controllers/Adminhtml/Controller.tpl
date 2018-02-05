@@ -2,6 +2,16 @@
 class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 {
     /**
+     * is allowed
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('path/to/config');
+    }
+
+    /**
      * init action
      *
      * @return void
@@ -22,7 +32,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     public function indexAction()
     {
         $this->_initAction();
-        $this->_title($this->__('Manage {{model|ucfirst}}'));
+        $this->_title($this->__('Manage {{model|uc_words: }}'));
 
         if ($this->getRequest()->isAjax()) {
             $block = $this->getLayout()->createBlock('{{module_alias}}/{{block_admin_grid}}');
@@ -42,10 +52,17 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     public function editAction()
     {
         $this->_initAction();
-        $this->_title($this->__('Edit {{model|ucfirst}}'));
+        $this->_title($this->__('Edit {{model|uc_words: }}'));
+
+        $entityId = $this->getRequest()->getParam('id', false);
+        $storeId = $this->getRequest()->getParam('store', 0);
+        $model = Mage::getModel('{{module_alias}}/{{model}}');
+        $model->setStoreId($storeId);
+        $model->load($entityId);
+        Mage::register('{{model}}', $model);
 
         $storeSwitcher = $this->getLayout()
-            ->createBlock('adminhtml/system_config_switcher');
+            ->createBlock('adminhtml/store_switcher');
         $tabs = $this->getLayout()
             ->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form_tabs');
         $tabsGeneral = $this->getLayout()
@@ -75,10 +92,10 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
     {
         $this->_initAction();
 
-        $this->_title($this->__('Create {{model|ucfirst}}'));
+        $this->_title($this->__('Create {{model|uc_words: }}'));
 
         $storeSwitcher = $this->getLayout()
-            ->createBlock('adminhtml/system_config_switcher');
+            ->createBlock('adminhtml/store_switcher');
         $tabs = $this->getLayout()->createBlock('{{module_alias}}/adminhtml_{{model}}_edit_form_tabs');
         $tabsGeneral = $this->getLayout()
             ->createBlock(
@@ -110,6 +127,10 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
         if ($data = $this->getRequest()->getPost()) {
 
+            if (isset($data['{{model}}'])) {
+                $data = $data['{{model}}'];
+            }
+
             $model = Mage::getModel('{{module_alias}}/{{model}}')->setData($data);
 
             try {
@@ -136,10 +157,13 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
         /* @var $model {{model_class_name}} */
         $helper = Mage::helper('{{module_alias}}/data');
 
-        $entityId = $this->getRequest()->getParam('entity_id', false);
+        $entityId = $this->getRequest()->getParam('id', false);
         $model = Mage::getModel('{{module_alias}}/{{model}}');
 
         if ($data = $this->getRequest()->getPost()) {
+            if (isset($data['{{model}}'])) {
+                $data = $data['{{model}}'];
+            }
             try {
                 if (!$entityId) {
                     Mage::exception('Mage_Core', $helper->__('Entity id not found'));
@@ -147,13 +171,13 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
 
                 $model->load($entityId);
                 if (!$model->getId()) {
-                    Mage::exception('Mage_Core', $helper->__('Model instance not found'));
+                    Mage::exception('Mage_Core', $helper->__('{{model|uc_words: }} instance not found'));
                 }
 
                 $model->addData($data);
                 $model->save();
                 Mage::getSingleton('adminhtml/session')
-                    ->addSuccess($helper->__('{{model|ucfirst}} has been successfully saved'));
+                    ->addSuccess($helper->__('{{model|uc_words: }} has been successfully saved'));
                 $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
                 return;
@@ -178,7 +202,7 @@ class {{admin_controller_class_name}} extends Mage_Adminhtml_Controller_Action
             $model->delete();
 
             Mage::getSingleton('adminhtml/session')
-                ->addSuccess(Mage::helper('{{module_alias}}/data')->__('{{model|ucfirst}} has been successfully deleted'));
+                ->addSuccess(Mage::helper('{{module_alias}}/data')->__('{{model|uc_words: }} has been successfully deleted'));
             $this->getResponse()->setRedirect($this->getUrl('*/*/'));
 
             return;
