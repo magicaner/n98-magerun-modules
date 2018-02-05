@@ -24,3 +24,4 @@ mage magic:model Module_Name table_alias modelname
 ```
 
 test
+
