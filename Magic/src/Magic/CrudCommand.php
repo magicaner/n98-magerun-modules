@@ -22,11 +22,17 @@ class CrudCommand extends AbstractMagentoCommand
     private $_applicationPaths = null;
     private $_templatePaths = null;
     protected $_templateVersion = 'basic';
+    protected $_basePath = '';
 
     /**
      * @var InputInterface
      */
     protected $_input = null;
+
+    public function isHidden()
+    {
+        return false;
+    }
 
     public $templates =
         [
@@ -70,6 +76,7 @@ class CrudCommand extends AbstractMagentoCommand
 
             ->addOption('menu', 'menu', InputOption::VALUE_OPTIONAL, 'Selected admin menu')
             ->addOption('force', 'force', InputOption::VALUE_OPTIONAL, 'Rewrite existing files', false)
+            ->addOption('basepath', 'basepath', InputOption::VALUE_OPTIONAL, 'Base path', false)
             ->addOption('template', 'template', InputOption::VALUE_OPTIONAL,
                 'Template version. \advanced\' or \'basic\'. By default \'basic\' is used', false)
 
@@ -149,12 +156,13 @@ class CrudCommand extends AbstractMagentoCommand
                     . DS . $codePool . DS . $this->uc_words($moduleName,'/','_');
 
         foreach ($paths as &$path) {
+
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
             $path = $moduleDir . DS . $path . $this->phpExtension;
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
-                [$this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
+                [($this->_basePath ? $this->_basePath . '/' : '' ) . $this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
                 $path
             );
         }
@@ -209,6 +217,11 @@ class CrudCommand extends AbstractMagentoCommand
         if ($this->_input->getOption('template')) {
             $this->_templateVersion = $this->_input->getOption('template');
         }
+
+        if ($this->_input->getOption('template')) {
+            $this->_basePath = $this->_input->getOption('basepath');
+        }
+
         $module = $this->_input->getArgument('module');
         $model = $this->_input->getArgument('model');
         $table = $this->_input->getArgument('table');
@@ -220,12 +233,7 @@ class CrudCommand extends AbstractMagentoCommand
 
         @list($tableAlias, $table) = @explode(':', $table);
         if (!$table) {
-            $path = sprintf(
-                'global/models/%s_resource/entities/%s/table',
-                $moduleAlias, $tableAlias
-            );
-
-            $table = (string)\Mage::getConfig()->getNode($path);
+            $table = \Mage::getSingleton('core/resource')->getTableName($moduleAlias.'/'.$tableAlias);
         }
 
 
@@ -288,7 +296,7 @@ class CrudCommand extends AbstractMagentoCommand
 
             if (method_exists($this, '_modificator' . $modificator)) {
                 if ($params) {
-                    $value = call_user_func_array([$this, '_modificator' . $modificator], explode(';', $params));
+                    $value = call_user_func_array([$this, '_modificator' . $modificator], $params);
                 } else {
                     $value = call_user_func([$this, '_modificator' . $modificator], $value);
                 }
