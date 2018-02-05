@@ -12,6 +12,11 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class ExecCommand extends AbstractMagentoCommand
 {
+    public function isHidden()
+    {
+        return false;
+    }
+    
     protected function configure()
     {
         $this

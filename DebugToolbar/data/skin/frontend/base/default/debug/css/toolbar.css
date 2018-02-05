@@ -515,6 +515,8 @@
   width: 64px;
   height: 64px;
   border: none;
+  animation: none;
+  -webkit-animation: none;
 }
 
 #djDebug .debug_profile_log {

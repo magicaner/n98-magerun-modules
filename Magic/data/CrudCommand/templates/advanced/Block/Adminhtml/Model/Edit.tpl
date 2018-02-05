@@ -21,13 +21,18 @@ class  {{block_admin_edit_class_name}}
 
         /* @var $model {{model_class_name}} */
 
-        if ($this->getRequest()->getParam($this->_objectId)) {
-            $model = Mage::getModel('{{module_alias}}/{{model}}');
-            $model->load($this->getRequest()->getParam($this->_objectId));
-            $this->setModel($model);
-        }
+        $this->_addButton('saveandcontinue', array(
+            'label' => Mage::helper('adminhtml')->__('Save And Continue Edit'),
+            'onclick' => 'saveAndContinueEdit()',
+            'class' => 'save',
+        ), -100);
 
 
+        $this->_formScripts[] = "
+            function saveAndContinueEdit(){
+                editForm.submit($('edit_form').action+'back/edit/');
+            }
+        ";
     }
 
     /**
