@@ -23,4 +23,4 @@ mage magic:crud Module_Name table_alias modelname --template=advanced // will cr
 mage magic:model Module_Name table_alias modelname
 ```
 
-
+test

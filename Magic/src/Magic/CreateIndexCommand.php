@@ -11,9 +11,9 @@ use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Input\InputArgument;
 
-class DevCommand extends AbstractMagentoCommand
+class ModelCommand extends AbstractMagentoCommand
 {
-    public $pathToData = '/../../data/DevCommand';
+    public $pathToData = '/../../data/CrudCommand';
 
     public $templateExtension = '.tpl';
     public $phpExtension = '.php';
@@ -21,29 +21,40 @@ class DevCommand extends AbstractMagentoCommand
     private $_vars = null;
     private $_applicationPaths = null;
     private $_templatePaths = null;
+    protected $_templateVersion = 'basic';
 
     /**
      * @var InputInterface
      */
     protected $_input = null;
 
-    public $templates = [
-            'install-script' => 'Helper/Data',
+    public $templates =
+        [
+            'basic' => [
+                'model' => 'Model/{{model}}',
+                'model_resource' => 'Model/Resource/{{model}}',
+                'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
+            ],
+            'advanced' => [
+                'model' => 'Model/{{model}}',
+                'model_resource' => 'Model/Resource/{{model}}',
+                'model_resource_collection' => 'Model/Resource/{{model}}/Collection',
+            ]
         ];
-
-    public function isHidden()
-    {
-        return false;
-    }
 
     protected function configure()
     {
         $this
-            ->setName('magic:dev')
-            ->addArgument('command', InputArgument::REQUIRED, 'Command name')
+            ->setName('magic:model')
             ->addArgument('module', InputArgument::REQUIRED, 'Module name')
+            ->addArgument('table', InputArgument::REQUIRED, 'Table name')
+            ->addArgument('model', InputArgument::REQUIRED, 'Model name')
 
-        ->setDescription('Create various of script types')
+            ->addOption('force', 'force', InputOption::VALUE_OPTIONAL, 'Rewrite existing files', false)
+            ->addOption('template', 'template', InputOption::VALUE_OPTIONAL,
+                'Template version. \advanced\' or \'basic\'. By default \'basic\' is used', false)
+
+        ->setDescription('Create Model, Resource, Collection for given table and model name')
         ;
 
     }
@@ -68,9 +79,9 @@ class DevCommand extends AbstractMagentoCommand
         return $absolutePathToModule = __DIR__ . DIRECTORY_SEPARATOR . $this->pathToData;
     }
 
-    protected function getTemplatesPath()
+    protected function getTemplatesPath($version = 'basic')
     {
-        return $this->getDataPath() . '/templates';
+        return $this->getDataPath() . '/templates/' . $this->_templateVersion;
     }
 
     protected function getTemplatePath($name)
@@ -89,7 +100,7 @@ class DevCommand extends AbstractMagentoCommand
             return $this->_templatePaths;
         }
 
-        $paths = $this->templates;
+        $paths = $this->templates[$this->_templateVersion];
 
         foreach ($paths as &$path) {
             $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -106,10 +117,15 @@ class DevCommand extends AbstractMagentoCommand
         if (isset($this->_applicationPaths)) {
             return $this->_applicationPaths;
         }
-        $paths = $this->templates;
+        $paths = $this->templates[$this->_templateVersion];
 
         $moduleName = $this->uc_words($this->_vars['module']);
         $codePool = (string)\Mage::app()->getConfig()->getModuleConfig($moduleName)->codePool;
+
+        if (!$codePool) {
+            throw new \Exception('Code pull not found for mdoule '. $moduleName);
+        }
+
         $moduleDir = \Mage::app()->getConfig()->getOptions()->getCodeDir()
                     . DS . $codePool . DS . $this->uc_words($moduleName,'/','_');
 
@@ -119,7 +135,7 @@ class DevCommand extends AbstractMagentoCommand
 
             $path = str_replace(
                 ['{{model}}', '{{controller}}'],
-                [$this->uc_words($this->_vars['model']), $this->uc_words($this->_vars['model']).'Controller'],
+                [$this->uc_words($this->_vars['model'], '/'), $this->uc_words($this->_vars['model'], '/').'Controller'],
                 $path
             );
         }
@@ -134,7 +150,6 @@ class DevCommand extends AbstractMagentoCommand
         foreach ($templates as $name => $path) {
 
             $content = $this->compileTemplate($path);
-
             $this->saveTemplate($name, $content);
         }
     }
@@ -172,13 +187,16 @@ class DevCommand extends AbstractMagentoCommand
     protected function initVariables(InputInterface $input)
     {
         $this->_input = $input;
+        if ($this->_input->getOption('template')) {
+            $this->_templateVersion = $this->_input->getOption('template');
+        }
         $module = $this->_input->getArgument('module');
         $model = $this->_input->getArgument('model');
         $table = $this->_input->getArgument('table');
 
         @list($module, $moduleAlias) = @explode(':', $module);
         if (!$moduleAlias) {
-            $moduleAlias = $module;
+            $moduleAlias = strtolower($module);
         }
 
         @list($tableAlias, $table) = @explode(':', $table);
@@ -192,35 +210,18 @@ class DevCommand extends AbstractMagentoCommand
         }
 
 
-
         $this->_vars = [
             'module' => $module,
             'module_alias' => $moduleAlias,
-            'model' => $model,
+            'model' => strtolower($model),
             'table' => $table,
             'table_alias' => $tableAlias,
             'primarykey' => $this->_getTablePrimaryKey($table),
-            'menu' => $this->_input->getOption('menu'),
 
             'model_class_name' => $this->_generateModelClassName($module, $model),
             'model_resource_class_name' => $this->_generateModelResourceClassName($module, $model),
             'model_resource_collection_class_name' => $this->_generateModelResourceCollectionClassName($module, $model),
-            'admin_controller_class_name' => $this->_generateAdminControllerClassName($module, $model),
-            'helper_data_class_name' => $this->_generatHelperClassName($module, 'data'),
-
-            'admin_controller' => 'adminhtml_' . $model,
-
-            'block_admin_grid_container' => $this->_generateBlockName($model, 'block_admin_grid_container'),
-            'block_admin_grid' => $this->_generateBlockName($model, 'block_admin_grid'),
-            'block_admin_edit' => $this->_generateBlockName($model, 'block_admin_edit'),
-            'block_admin_edit_form' => $this->_generateBlockName($model, 'block_admin_edit_form'),
-
-            'block_admin_grid_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid'),
-            'block_admin_edit_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit'),
-            'block_admin_edit_form_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_edit_form'),
-            'block_admin_grid_container_class_name' => $this->_generateBlockClassName($module, $model, 'block_admin_grid_container'),
         ];
-
     }
 
     protected function getVariableValue($variable)
@@ -243,12 +244,32 @@ class DevCommand extends AbstractMagentoCommand
         }
 
         foreach ($modificators as $modificator) {
-            if (function_exists($modificator)) {
-                $value = call_user_func($modificator, $value);
-            } elseif (method_exists($this, '_modificator'.$modificator)) {
-                $value = call_user_func([$this, '_modificator'.$modificator], $value);
+
+            list($modificator, $params)  = @explode(':', $modificator);
+            if ($params) {
+                $params = array_merge([$value], explode(';', $params));
+            }
+
+
+            if (method_exists($this, '_modificator' . $modificator)) {
+                if ($params) {
+                    $value = call_user_func_array([$this, '_modificator' . $modificator], explode(';', $params));
+                } else {
+                    $value = call_user_func([$this, '_modificator' . $modificator], $value);
+                }
+
             } elseif (method_exists($this, $modificator)) {
-                $value = call_user_func([$this, $modificator], $value);
+                if ($params) {
+                    $value = call_user_func_array([$this, $modificator], $params);
+                } else {
+                    $value = call_user_func([$this, $modificator], $value);
+                }
+            } elseif (function_exists($modificator)) {
+                if ($params) {
+                    $value = call_user_func_array($modificator, explode(';', $params));
+                } else {
+                    $value = call_user_func($modificator, $value);
+                }
             }
         }
 
@@ -291,43 +312,6 @@ class DevCommand extends AbstractMagentoCommand
         return $connection->getPrimaryKeyName($tableName);
     }
 
-    private function _generateBlockName($model, $blockName)
-    {
-        $patterns = [
-            'block_admin_grid_container' => 'adminhtml_{{model}}',
-            'block_admin_grid' => 'adminhtml_{{model}}_grid',
-            'block_admin_edit' => 'adminhtml_{{model}}_edit',
-            'block_admin_edit_form' => 'adminhtml_{{model}}_edit_form'
-        ];
-
-        if (isset($patterns[$blockName])) {
-            return str_replace('{{model}}', $model, $patterns[$blockName]);
-        } else {
-            return $blockName;
-        }
-    }
-
-    private function _generateBlockClassName($module, $model, $blockName)
-    {
-        $patterns = [
-            'block_admin_grid_container' => '{{module}}_block_adminhtml_{{model}}',
-            'block_admin_grid' => '{{module}}_block_adminhtml_{{model}}_grid',
-            'block_admin_edit' => '{{module}}_block_adminhtml_{{model}}_edit',
-            'block_admin_edit_form' => '{{module}}_block_adminhtml_{{model}}_edit_form',
-        ];
-
-        if (isset($patterns[$blockName])) {
-            return $this->uc_words(str_replace(['{{module}}','{{model}}'], [$module, $model], $patterns[$blockName]));
-        } else {
-            return $blockName;
-        }
-    }
-
-    private function _generatHelperClassName($module, $name)
-    {
-        return $this->uc_words($module . '_Helper_' . $name);
-    }
-
     /**
      * Tiny function to enhance functionality of ucwords
      *
@@ -338,7 +322,7 @@ class DevCommand extends AbstractMagentoCommand
      * @param string $srcSep
      * @return string
      */
-    private function uc_words($str, $destSep='_', $srcSep='_')
+    public function uc_words($str, $destSep='_', $srcSep='_')
     {
         return str_replace(' ', $destSep, ucwords(str_replace($srcSep, ' ', $str)));
     }
@@ -351,5 +335,10 @@ class DevCommand extends AbstractMagentoCommand
     public function getInput()
     {
         return $this->_input;
+    }
+
+    public function _modificatorUcWords($str, $destSep='_', $srcSep='_')
+    {
+        return $this->uc_words($str, $destSep, $srcSep);
     }
 }
