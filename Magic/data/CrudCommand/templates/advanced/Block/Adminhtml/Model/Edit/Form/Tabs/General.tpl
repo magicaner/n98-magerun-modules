@@ -12,16 +12,17 @@ class {{block_admin_edit_form_class_name}}_Tabs_General
     {
         return Mage::helper('{{module_alias}}');
     }
+
     /**
      * get model
      *
      * @return Varien_Object
      */
-    protected function _getModel()
+    protected function getModel()
     {
         if (!$this->hasData('model')) {
             if ((!$model = Mage::registry('{{model}}'))) {
-                $model = new Varien_Object();
+                $model = Mage::getModel('{{module_alias}}/{{model}}');
             }
             $this->setData('model', $model);
         }
@@ -47,7 +48,7 @@ class {{block_admin_edit_form_class_name}}_Tabs_General
             'required'  => true,
         ));
 
-        $form->setDataObject($this->_getModel());
+        $form->setDataObject($this->getModel());
         $form->setFieldNameSuffix('{{model}}');
         $this->setForm($form);
     }

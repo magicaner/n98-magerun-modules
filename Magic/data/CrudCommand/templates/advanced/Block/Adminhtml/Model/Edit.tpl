@@ -4,6 +4,22 @@ class  {{block_admin_edit_class_name}}
     extends Mage_Adminhtml_Block_Widget_Form_Container
 {
     /**
+     * get model
+     *
+     * @return Varien_Object
+     */
+    protected function getModel()
+    {
+        if (!$this->hasData('model')) {
+            if ((!$model = Mage::registry('{{model}}'))) {
+                $model = Mage::getModel('{{module_alias}}/{{model}}');
+            }
+            $this->setData('model', $model);
+        }
+        return $this->getData('model');
+    }
+
+    /**
      * Init the form container
      *
      * @return void
