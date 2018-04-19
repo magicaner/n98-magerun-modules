@@ -18,7 +18,7 @@ class {{block_admin_edit_form_class_name}}_Tabs_General
      *
      * @return Varien_Object
      */
-    protected function getModel()
+    protected function _getModel()
     {
         if (!$this->hasData('model')) {
             if ((!$model = Mage::registry('{{model}}'))) {
